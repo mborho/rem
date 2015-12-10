@@ -65,5 +65,5 @@ $ rem rm 1
 
 ### License
 
-GPLv3 - see [LICENSE](https://raw.githubusercontent.com/mborho/rem/master/README.md)
+GPLv3 - see [LICENSE](https://raw.githubusercontent.com/mborho/rem/master/LICENSE)
 
