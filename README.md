@@ -19,7 +19,7 @@ $ ./rem
 
 
 ### PPA ##
-rem is available for Ubuntu x86_64 [ppa:martin-borho/rem](https://launchpad.net/~martin-borho/+archive/ubuntu/rem)
+rem is installable on Ubuntu x86_64 via [ppa:martin-borho/rem](https://launchpad.net/~martin-borho/+archive/ubuntu/rem)
 
 
 ```
