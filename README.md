@@ -11,7 +11,7 @@ $ GOPATH=`pwd` go build -o rem main.go
 $ ./rem
 ```
 
-### Statically linked binary 
+### Statically linked binaries 
 
 [LINUX/x86](https://raw.githubusercontent.com/mborho/rem/master/bin/linux_amd64/rem) (2MB)
 
