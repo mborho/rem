@@ -11,6 +11,25 @@ $ GOPATH=`pwd` go build -o rem main.go
 $ ./rem
 ```
 
+### Statically linked binary 
+
+[LINUX/x86](https://raw.githubusercontent.com/mborho/rem/master/bin/linux_amd64/rem) (2MB)
+
+[DARWIN/386](https://raw.githubusercontent.com/mborho/rem/master/bin/linux_darwin/rem) (1.6MB)
+
+
+### PPA ##
+rem is available for Ubuntu x86_64 [ppa:martin-borho/rem](https://launchpad.net/~martin-borho/+archive/ubuntu/rem)
+
+
+```
+#!bash
+
+sudo add-apt-repository ppa:martin-borho/rem
+sudo apt-get update
+sudo apt-get install rem
+```
+
 ### Usage
 ```sh
 $ rem command [argument]
