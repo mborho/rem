@@ -2,6 +2,28 @@
 
 rem is a small tool for remembering things on the command line. It can be used to store commands and execute them later on. Or to simply store lines of text.
 
+### Usage
+```sh
+$ rem command [argument]
+```
+
+### Commands
+
+*    -h, help - Shows this help.
+*    -a, add [string] - Adds a command/text.
+*    rm [index] - Removes line with given index number.
+*    echo [index] - Displays line with given index number.
+*    here - Creates a .rem file in the given directory. Default: **~/.rem**
+*    clear - Clears currently active .rem file, **./.rem** or **~/.rem**
+*    [index] - Executes line with given index number.
+
+### Flags
+
+* -g - Use global rem file ~/.rem
+
+
+Run **rem** without any arguments to list all stored commands/strings.
+
 ### Build & Run
 
 ```sh
@@ -29,22 +51,6 @@ sudo add-apt-repository ppa:martin-borho/rem
 sudo apt-get update
 sudo apt-get install rem
 ```
-
-### Usage
-```sh
-$ rem command [argument]
-```
-### Commands
-
-*    help - Shows this help.
-*    add [string] - Adds a command/text.
-*    rm [index] - Removes line with given index number.
-*    echo [index] - Displays line with given index number.
-*    here - Creates a .rem file in the given directory. Default: **~/.rem**
-*    clear - Clears currently active .rem file, **./.rem** or **~/.rem**
-*    [index] - Executes line with given index number.
-
-Run **rem** without any arguments to list all stored commands/strings.
 
 ### Examples
 
