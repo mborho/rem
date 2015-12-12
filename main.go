@@ -40,15 +40,15 @@ func init() {
     rem - small tool for remembering things on the command line.
 
 USAGE:
-    rem [command] [argument]
+    rem [flags] [command] [argument]
 
 
 VERSION:
-    0.1.0
+    0.2.0
 
 COMMANDS:
-    help - Shows this help.
-    add [string] - Adds a command/text.
+    -h, help - Shows this help.
+    -a, add [string] - Adds a command/text.
     rm [index] - Removes line with given index number.
     echo [index] - Displays line with given index number.
     here - Creates a .rem file in the given directory. Default: ~/.rem
@@ -56,6 +56,9 @@ COMMANDS:
     [index] - Executes line with given index number.
 
     Run 'rem' without arguments to list all stored commands/strings.
+
+FLAGS:
+    -g - Use global rem file ~/.rem
 
 EXAMPLES:
     rem 2 - Executes line with index number 2.
@@ -71,6 +74,7 @@ type RemFile struct {
 	appendTo bool
 	filename string
 	file     *os.File
+	global   bool
 }
 
 func (r *RemFile) appendLine(line string) error {
@@ -201,15 +205,18 @@ func (r *RemFile) setFile() error {
 }
 
 func (r *RemFile) setPath() error {
-	// Set path to history file in current dir if one exists
-	dir, err := os.Getwd()
-	if err != nil {
-		return err
-	}
-	localFile := path.Join(dir, r.filename)
-	if _, err := os.Stat(localFile); err == nil {
-		r.path = localFile
-		return nil
+	// ignore current dir if global .rem file is wanted
+	if r.global == false {
+		// Set path to history file in current dir if one exists
+		dir, err := os.Getwd()
+		if err != nil {
+			return err
+		}
+		localFile := path.Join(dir, r.filename)
+		if _, err := os.Stat(localFile); err == nil {
+			r.path = localFile
+			return nil
+		}
 	}
 
 	// Set default path to rem's history file
@@ -234,24 +241,32 @@ func exit(msg error) {
 }
 
 func main() {
+	globalFlag := flag.Bool("g", false, "use global rem file")
+	helpFlag := flag.Bool("h", false, "show this help")
+	addFlag := flag.Bool("a", false, "add a command")
 	flag.Parse()
 
 	rem := &RemFile{
 		filename: ".rem",
+		global:   *globalFlag,
 	}
 	rem.setPath()
 
 	var err error
 	remCmd := flag.Arg(0)
 	switch {
-	case remCmd == "help":
+	case (remCmd == "help" || *helpFlag == true):
 		fmt.Println(help)
 	case remCmd == "here":
 		err = rem.createLocalFile()
 	case remCmd == "clear":
 		err = rem.clearFile()
-	case remCmd == "add":
-		err = rem.appendLine(strings.Join(flag.Args()[1:], " "))
+	case (remCmd == "add" || *addFlag == true):
+		startIndex := 1
+		if *addFlag == true {
+			startIndex = 0
+		}
+		err = rem.appendLine(strings.Join(flag.Args()[startIndex:], " "))
 	case remCmd == "rm":
 		err = rem.removeLine(toInt(flag.Arg(1)))
 	case remCmd == "echo":
