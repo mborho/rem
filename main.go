@@ -26,6 +26,7 @@ import (
 	"os/exec"
 	"os/user"
 	"path"
+	"regexp"
 	"strconv"
 	"strings"
 	"syscall"
@@ -44,13 +45,14 @@ USAGE:
 
 
 VERSION:
-    0.2.0
+    0.3.0
 
 COMMANDS:
     -h, help - Shows this help.
     -a, add [string] - Adds a command/text.
     rm [index] - Removes line with given index number.
     echo [index] - Displays line with given index number.
+    -f, filter [regexp] - Filters stored commands by given regular expression.
     here - Creates a .rem file in the given directory. Default: ~/.rem
     clear - Clears currently active .rem file, ./.rem or ~/.rem
     [index] - Executes line with given index number.
@@ -127,6 +129,21 @@ func (r *RemFile) execute(index int) error {
 	// replace the current process
 	env := os.Environ()
 	syscall.Exec(execPath, cmdParts, env)
+	return nil
+}
+
+func (r *RemFile) filterLines(filter string) error {
+	// Print lines filtered by string (regular expression).
+	r.read()
+	for x, line := range r.lines {
+		matched, err := regexp.MatchString("(?i)"+filter, line)
+		if err != nil {
+			return nil
+		}
+		if matched {
+			fmt.Printf(" %d  %s\n", x, line)
+		}
+	}
 	return nil
 }
 
@@ -244,6 +261,7 @@ func main() {
 	globalFlag := flag.Bool("g", false, "use global rem file")
 	helpFlag := flag.Bool("h", false, "show this help")
 	addFlag := flag.Bool("a", false, "add a command")
+	filter := flag.String("f", "", "List commands by regexp filter.")
 	flag.Parse()
 
 	rem := &RemFile{
@@ -267,6 +285,10 @@ func main() {
 			startIndex = 0
 		}
 		err = rem.appendLine(strings.Join(flag.Args()[startIndex:], " "))
+	case (remCmd == "filter"):
+		err = rem.filterLines(strings.Join(flag.Args()[1:], " "))
+	case *filter != "":
+		err = rem.filterLines(*filter)
 	case remCmd == "rm":
 		err = rem.removeLine(toInt(flag.Arg(1)))
 	case remCmd == "echo":

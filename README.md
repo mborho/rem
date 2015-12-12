@@ -13,6 +13,7 @@ $ rem command [argument]
 *    -a, add [string] - Adds a command/text.
 *    rm [index] - Removes line with given index number.
 *    echo [index] - Displays line with given index number.
+*    -f, filter [regexp] - Filters stored commands by given regular expression.
 *    here - Creates a .rem file in the given directory. Default: **~/.rem**
 *    clear - Clears currently active .rem file, **./.rem** or **~/.rem**
 *    [index] - Executes line with given index number.
