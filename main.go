@@ -185,15 +185,15 @@ func (r *RemFile) removeLine(index int) error {
 
 func (r *RemFile) setFile() error {
 	// which mode to use to open file
-	var flags int
+	var openFlags int
 	if r.appendTo {
-		flags = os.O_CREATE | os.O_APPEND | os.O_WRONLY
+		openFlags = os.O_CREATE | os.O_APPEND | os.O_WRONLY
 	} else {
-		flags = os.O_CREATE | os.O_RDONLY
+		openFlags = os.O_CREATE | os.O_RDONLY
 	}
 
 	// open history file
-	file, err := os.OpenFile(r.path, flags, 0600)
+	file, err := os.OpenFile(r.path, openFlags, 0600)
 	if err == nil {
 		r.file = file
 	}
