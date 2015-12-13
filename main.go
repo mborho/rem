@@ -30,6 +30,7 @@ import (
 	"strconv"
 	"strings"
 	"syscall"
+	"text/tabwriter"
 )
 
 var (
@@ -45,7 +46,7 @@ USAGE:
 
 
 VERSION:
-    0.3.0
+    0.4.0
 
 COMMANDS:
     -h, help - Shows this help.
@@ -155,12 +156,19 @@ func (r *RemFile) getLine(index int) (string, error) {
 	return r.lines[index], nil
 }
 
+func (r *RemFile) getTabWriter() *tabwriter.Writer {
+	// Returns new instance of a tabwriter
+	return tabwriter.NewWriter(os.Stdout, 1, 0, 2, ' ', tabwriter.DiscardEmptyColumns)
+}
+
 func (r *RemFile) printAllLines() {
 	// Print saved lines enumerated
+	w := r.getTabWriter()
 	r.read()
 	for x, line := range r.lines {
-		fmt.Printf(" %d  %s\n", x, line)
+		fmt.Fprintf(w, " %d\t%s\n", x, line)
 	}
+	w.Flush()
 }
 
 func (r *RemFile) printLine(index int) error {
