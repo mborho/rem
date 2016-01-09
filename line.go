@@ -1,7 +1,9 @@
 package main
 
 import (
+	"fmt"
 	"regexp"
+	"text/tabwriter"
 )
 
 type Line struct {
@@ -10,6 +12,7 @@ type Line struct {
 	tag  string
 }
 
+// Read incoming string into Line struct.
 func (l *Line) read(line string) {
 	re := regexp.MustCompile("^#([^ ]+)?#")
 	l.line = line
@@ -19,5 +22,18 @@ func (l *Line) read(line string) {
 	} else {
 		// not tag found, simple command
 		l.cmd = line
+	}
+}
+
+// Prints line to tabwriter.
+func (l *Line) print(w *tabwriter.Writer, index int, withTag bool) {
+	if withTag {
+		tag := ""
+		if tag = l.tag; tag == "" {
+			tag = " - "
+		}
+		fmt.Fprintf(w, " %d\t%s\t%s\n", index, tag, l.cmd)
+	} else {
+		fmt.Fprintf(w, " %d\t%s\n", index, l.cmd)
 	}
 }
