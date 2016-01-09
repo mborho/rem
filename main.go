@@ -287,12 +287,13 @@ func (r *RemFile) setPath() error {
 	return err
 }
 
-func toInt(str string) int {
+func toInt(str string) (int, error) {
 	integer, err := strconv.Atoi(str)
 	if err != nil {
-		return -1
+		fmt.Println(err)
+		return 0, errors.New("Need index number.")
 	}
-	return integer
+	return integer, err
 }
 
 func exit(msg error) {
@@ -315,6 +316,7 @@ func main() {
 	rem.setPath()
 
 	var err error
+	var index int
 	remCmd := flag.Arg(0)
 	switch {
 	case (remCmd == "help" || *helpFlag == true):
@@ -334,18 +336,22 @@ func main() {
 	case *filter != "":
 		err = rem.filterLines(*filter)
 	case remCmd == "rm":
-		err = rem.removeLine(toInt(flag.Arg(1)))
+		if index, err = toInt(flag.Arg(1)); err == nil {
+			err = rem.removeLine(index)
+		}
 	case remCmd == "echo":
-		err = rem.printLine(toInt(flag.Arg(1)))
-	case remCmd != "" && toInt(remCmd) > -1:
-		err = rem.executeIndex(toInt(remCmd))
+		if index, err = toInt(flag.Arg(1)); err == nil {
+			err = rem.printLine(index)
+		}
+	case remCmd != "":
+		if index, err = toInt(remCmd); err == nil {
+			err = rem.executeIndex(index)
+		} else {
+			err = rem.executeTag(remCmd)
+		}
 	default:
 		// if there is not known remCMD it can be assumed it is a tag
-		if remCmd != "" {
-			err = rem.executeTag(remCmd)
-		} else {
-			rem.printAllLines()
-		}
+		rem.printAllLines()
 	}
 	if err != nil {
 		exit(err)
