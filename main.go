@@ -73,20 +73,24 @@ EXAMPLES:
 
 type RemFile struct {
 	path     string
-	lines    []string
+	lines    []*Line
 	appendTo bool
 	filename string
 	file     *os.File
 	global   bool
 }
 
-func (r *RemFile) appendLine(line string) error {
+func (r *RemFile) appendLine(line, tag string) error {
 	// Append line to the history file
 	r.appendTo = true
 	r.setFile()
 	defer r.file.Close()
 
-	line = fmt.Sprintf("%s\n", line)
+	if tag != "" {
+		line = fmt.Sprintf("#%s#%s", tag, line)
+	} else {
+		line = fmt.Sprintf("%s\n", line)
+	}
 	if _, err := r.file.WriteString(line); err != nil {
 		panic(err)
 	}
@@ -137,7 +141,7 @@ func (r *RemFile) filterLines(filter string) error {
 	// Print lines filtered by string (regular expression).
 	r.read()
 	for x, line := range r.lines {
-		matched, err := regexp.MatchString("(?i)"+filter, line)
+		matched, err := regexp.MatchString("(?i)"+filter, line.cmd)
 		if err != nil {
 			return nil
 		}
@@ -153,7 +157,7 @@ func (r *RemFile) getLine(index int) (string, error) {
 	if len(r.lines) <= index {
 		return "", errors.New("index out of range!")
 	}
-	return r.lines[index], nil
+	return r.lines[index].cmd, nil
 }
 
 func (r *RemFile) getTabWriter() *tabwriter.Writer {
@@ -166,7 +170,7 @@ func (r *RemFile) printAllLines() {
 	w := r.getTabWriter()
 	r.read()
 	for x, line := range r.lines {
-		fmt.Fprintf(w, " %d\t%s\n", x, line)
+		fmt.Fprintf(w, " %d\t%s\t%s\n", x, line.tag, line.cmd)
 	}
 	w.Flush()
 }
@@ -184,7 +188,7 @@ func (r *RemFile) printLine(index int) error {
 
 func (r *RemFile) read() error {
 	// Read lines from the history file.
-	lines := []string{}
+	lines := []*Line{}
 
 	// read history
 	r.setFile()
@@ -193,7 +197,9 @@ func (r *RemFile) read() error {
 	// read lines
 	scanner := bufio.NewScanner(r.file)
 	for scanner.Scan() {
-		lines = append(lines, scanner.Text())
+		l := &Line{}
+		l.read(scanner.Text())
+		lines = append(lines, l)
 	}
 
 	if err := scanner.Err(); err != nil {
@@ -206,7 +212,10 @@ func (r *RemFile) read() error {
 func (r *RemFile) removeLine(index int) error {
 	// Removes a line from the rem file at given index.
 	r.read()
-	lines := append(r.lines[:index], r.lines[index+1:]...)
+	lines := []string{}
+	for _, line := range append(r.lines[:index], r.lines[index+1:]...) {
+		lines = append(lines, line.line)
+	}
 	newLines := append([]byte(strings.Join(lines, "\n")), byte('\n'))
 	err := ioutil.WriteFile(r.path, newLines, 0644)
 	return err
@@ -269,6 +278,7 @@ func main() {
 	globalFlag := flag.Bool("g", false, "use global rem file")
 	helpFlag := flag.Bool("h", false, "show this help")
 	addFlag := flag.Bool("a", false, "add a command")
+	tagFlag := flag.String("t", "", "tag for command")
 	filter := flag.String("f", "", "List commands by regexp filter.")
 	flag.Parse()
 
@@ -292,7 +302,7 @@ func main() {
 		if *addFlag == true {
 			startIndex = 0
 		}
-		err = rem.appendLine(strings.Join(flag.Args()[startIndex:], " "))
+		err = rem.appendLine(strings.Join(flag.Args()[startIndex:], " "), *tagFlag)
 	case (remCmd == "filter"):
 		err = rem.filterLines(strings.Join(flag.Args()[1:], " "))
 	case *filter != "":
