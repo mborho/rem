@@ -56,16 +56,19 @@ COMMANDS:
     -f, filter [regexp] - Filters stored commands by given regular expression.
     here - Creates a .rem file in the given directory. Default: ~/.rem
     clear - Clears currently active .rem file, ./.rem or ~/.rem
-    [index] - Executes line with given index number.
+    [index|tag] - Executes line with given index number / tag name.
 
     Run 'rem' without arguments to list all stored commands/strings.
 
 FLAGS:
     -g - Use global rem file ~/.rem
+    -t - Tag for command when adding with -a/add.
 
 EXAMPLES:
-    rem 2 - Executes line with index number 2.
     rem add ls -la - Adds "ls -la" to list.
+    rem -t list add ls -la - Adds "ls -la" to list with tag "list".
+    rem list - Executes line tagged with "list" (ls-la)
+    rem 2 - Executes line with index number 2.
     rem rm 4 - Removes line 4.
     rem - Lists all stored commands.
     `

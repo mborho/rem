@@ -16,11 +16,12 @@ $ rem command [argument]
 *    -f, filter [regexp] - Filters stored commands by given regular expression.
 *    here - Creates a .rem file in the given directory. Default: **~/.rem**
 *    clear - Clears currently active .rem file, **./.rem** or **~/.rem**
-*    [index] - Executes line with given index number.
+*    [index|tag] - Executes line with given index number / tag name.
 
 ### Flags
 
 * -g - Use global rem file ~/.rem
+* -t - Tag for command when adding with -a/add.
 
 
 Run **rem** without any arguments to list all stored commands/strings.
