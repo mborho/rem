@@ -75,6 +75,7 @@ type RemFile struct {
 	path     string
 	lines    []*Line
 	appendTo bool
+	hasTags  bool
 	filename string
 	file     *os.File
 	global   bool
@@ -169,8 +170,10 @@ func (r *RemFile) printAllLines() {
 	// Print saved lines enumerated
 	w := r.getTabWriter()
 	r.read()
+
+	// print out, ignore tags if no tags are present
 	for x, line := range r.lines {
-		fmt.Fprintf(w, " %d\t%s\t%s\n", x, line.tag, line.cmd)
+		line.print(w, x, r.hasTags)
 	}
 	w.Flush()
 }
@@ -197,9 +200,15 @@ func (r *RemFile) read() error {
 	// read lines
 	scanner := bufio.NewScanner(r.file)
 	for scanner.Scan() {
+		// parse line
 		l := &Line{}
 		l.read(scanner.Text())
 		lines = append(lines, l)
+
+		// tags in files?
+		if l.tag != "" {
+			r.hasTags = true
+		}
 	}
 
 	if err := scanner.Err(); err != nil {
