@@ -290,7 +290,6 @@ func (r *RemFile) setPath() error {
 func toInt(str string) (int, error) {
 	integer, err := strconv.Atoi(str)
 	if err != nil {
-		fmt.Println(err)
 		return 0, errors.New("Need index number.")
 	}
 	return integer, err
