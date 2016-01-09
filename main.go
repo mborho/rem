@@ -149,7 +149,7 @@ func (r *RemFile) executeTag(tag string) error {
 			return r.execute(line.cmd)
 		}
 	}
-	return errors.New("Tag not known!")
+	return errors.New("Tag not found.")
 }
 
 func (r *RemFile) filterLines(filter string) error {
@@ -170,7 +170,7 @@ func (r *RemFile) filterLines(filter string) error {
 func (r *RemFile) getLine(index int) (string, error) {
 	// Returns command by index.
 	if len(r.lines) <= index {
-		return "", errors.New("index out of range!")
+		return "", errors.New("Index out of range.")
 	}
 	return r.lines[index].cmd, nil
 }
