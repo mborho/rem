@@ -117,12 +117,7 @@ func (r *RemFile) createLocalFile() error {
 	return nil
 }
 
-func (r *RemFile) execute(index int) error {
-	r.read()
-	cmdStr, err := r.getLine(index)
-	if err != nil {
-		return err
-	}
+func (r *RemFile) execute(cmdStr string) error {
 	// Replace the current process with the cmd.
 	cmdParts := strings.Split(cmdStr, " ")
 
@@ -136,6 +131,25 @@ func (r *RemFile) execute(index int) error {
 	env := os.Environ()
 	syscall.Exec(execPath, cmdParts, env)
 	return nil
+}
+
+func (r *RemFile) executeIndex(index int) error {
+	r.read()
+	cmdStr, err := r.getLine(index)
+	if err != nil {
+		return err
+	}
+	return r.execute(cmdStr)
+}
+
+func (r *RemFile) executeTag(tag string) error {
+	r.read()
+	for _, line := range r.lines {
+		if line.tag == tag {
+			return r.execute(line.cmd)
+		}
+	}
+	return errors.New("Tag not known!")
 }
 
 func (r *RemFile) filterLines(filter string) error {
@@ -321,9 +335,14 @@ func main() {
 	case remCmd == "echo":
 		err = rem.printLine(toInt(flag.Arg(1)))
 	case remCmd != "" && toInt(remCmd) > -1:
-		err = rem.execute(toInt(remCmd))
+		err = rem.executeIndex(toInt(remCmd))
 	default:
-		rem.printAllLines()
+		// if there is not known remCMD it can be assumed it is a tag
+		if remCmd != "" {
+			err = rem.executeTag(remCmd)
+		} else {
+			rem.printAllLines()
+		}
 	}
 	if err != nil {
 		exit(err)
