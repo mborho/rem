@@ -46,7 +46,7 @@ USAGE:
 
 
 VERSION:
-    0.4.0
+    0.7.0
 
 COMMANDS:
     -h, help - Shows this help.
@@ -349,7 +349,7 @@ func main() {
 			err = rem.executeTag(remCmd)
 		}
 	default:
-		// if there is not known remCMD it can be assumed it is a tag
+		// if there is a not known rem-cmd it can be assumed it is a tag
 		rem.printAllLines()
 	}
 	if err != nil {

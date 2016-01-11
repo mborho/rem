@@ -21,11 +21,11 @@ func TestParseLine(t *testing.T) {
 	line = "ls -la"
 	l.read(line)
 	if l.tag != "" {
-		t.Errorf("Zag was found in %s", line)
+		t.Errorf("Tag was found in %s", line)
 	}
 
 	if l.cmd != "ls -la" {
-		t.Errorf("Command not properly found in %s", line)
+		t.Errorf("Command was not found in %s", line)
 	}
 
 }

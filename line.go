@@ -20,7 +20,7 @@ func (l *Line) read(line string) {
 		l.tag = string(tagMatch[1])
 		l.cmd = line[len(l.tag)+2:]
 	} else {
-		// not tag found, simple command
+		// no tag found, simple command
 		l.cmd = line
 	}
 }
