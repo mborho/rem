@@ -91,7 +91,7 @@ func (r *RemFile) appendLine(line, tag string) error {
 	defer r.file.Close()
 
 	if tag != "" {
-		line = fmt.Sprintf("#%s#%s", tag, line)
+		line = fmt.Sprintf("#%s#%s\n", tag, line)
 	} else {
 		line = fmt.Sprintf("%s\n", line)
 	}
