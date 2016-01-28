@@ -101,11 +101,11 @@ func (r *RemFile) appendLine(line, tag string) error {
 	return nil
 }
 
-func (r *RemFile) clearFile() error {
+/*func (r *RemFile) clearFile() error {
 	return os.Remove(r.path)
-}
+}*/
 
-func (r *RemFile) createLocalFile() error {
+/*func (r *RemFile) createLocalFile() error {
 	// Create history file in the current directory.
 	dir, err := os.Getwd()
 	if err != nil {
@@ -118,7 +118,7 @@ func (r *RemFile) createLocalFile() error {
 		return err
 	}
 	return nil
-}
+}*/
 
 func (r *RemFile) execute(cmdStr string) error {
 	// Replace the current process with the cmd.
@@ -247,7 +247,7 @@ func (r *RemFile) removeLine(index int) error {
 	return err
 }
 
-func (r *RemFile) setFile() error {
+/*func (r *RemFile) setFile() error {
 	// which mode to use to open file
 	var openFlags int
 	if r.appendTo {
@@ -262,9 +262,9 @@ func (r *RemFile) setFile() error {
 		r.file = file
 	}
 	return nil
-}
+}*/
 
-func (r *RemFile) setPath() error {
+/*func (r *RemFile) setPath() error {
 	// ignore current dir if global .rem file is wanted
 	if r.global == false {
 		// Set path to history file in current dir if one exists
@@ -285,7 +285,7 @@ func (r *RemFile) setPath() error {
 		r.path = path.Join(usr.HomeDir, r.filename)
 	}
 	return err
-}
+}*/
 
 func toInt(str string) (int, error) {
 	integer, err := strconv.Atoi(str)
