@@ -17,10 +17,10 @@
 package main
 
 import (
-    "os"
+	"os"
+	"os/user"
+	"path"
 )
-
-
 
 type File struct {
 	path     string
@@ -33,7 +33,7 @@ func (f *File) clearFile() error {
 	return os.Remove(f.path)
 }
 
-func (f *File) setFile(appendTo booö) error {
+func (f *File) setFile(appendTo bool) error {
 	// which mode to use to open file
 	var openFlags int
 	if appendTo {
@@ -57,7 +57,7 @@ func (f *File) createLocalFile() error {
 		return err
 	}
 	localFile := path.Join(dir, f.filename)
-	f.file, err := os.OpenFile(localFile, os.O_CREATE, 0600)
+	f.file, err = os.OpenFile(localFile, os.O_CREATE, 0600)
 	defer f.file.Close()
 	if err != nil {
 		return err
@@ -87,4 +87,3 @@ func (f *File) setPath() error {
 	}
 	return err
 }
-
