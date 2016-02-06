@@ -62,6 +62,8 @@ func (f *File) createLocalFile() error {
 	if err != nil {
 		return err
 	}
+
+	f.path = localFile
 	return nil
 }
 

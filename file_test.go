@@ -27,6 +27,7 @@ func removeTestFile(f *os.File) {
 	f.Close()
 	os.Remove(f.Name())
 }
+
 func TestSetPath(t *testing.T) {
 
 	file := &File{
@@ -65,13 +66,19 @@ func TestSetPath(t *testing.T) {
 	}
 }
 
-/*func TestCreateLocalFile(t *testing.T) {
+func TestCreateLocalFile(t *testing.T) {
 
 	file := &File{
-		filename: ".rem_test",
+		filename: ".rem_test_create_local_file",
+		global:   false,
 	}
-	err := file.setPath(); err != nil {
-		t.Errorf("Error when creating file.")
+	file.setPath()
+	if err := file.createLocalFile(); err != nil {
+		t.Errorf("Error when creating local file.")
 	}
 
-}*/
+	if _, err := os.Stat(file.path); os.IsNotExist(err) {
+		t.Errorf("Local file was not created: %s", file.path)
+	}
+	defer removeTestFile(file.file)
+}
