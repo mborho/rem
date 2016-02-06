@@ -24,8 +24,6 @@ import (
 	"io/ioutil"
 	"os"
 	"os/exec"
-	"os/user"
-	"path"
 	"regexp"
 	"strconv"
 	"strings"
@@ -75,50 +73,37 @@ EXAMPLES:
 }
 
 type RemFile struct {
-	path     string
-	lines    []*Line
-	appendTo bool
-	hasTags  bool
-	filename string
-	file     *os.File
-	global   bool
+	path    string
+	lines   []*Line
+	hasTags bool
+	file    *File
+	global  bool
 }
 
 func (r *RemFile) appendLine(line, tag string) error {
 	// Append line to the history file
-	r.appendTo = true
-	r.setFile()
-	defer r.file.Close()
+	r.file.setFile(true)
+	defer r.close()
 
 	if tag != "" {
 		line = fmt.Sprintf("#%s#%s\n", tag, line)
 	} else {
 		line = fmt.Sprintf("%s\n", line)
 	}
-	if _, err := r.file.WriteString(line); err != nil {
+	//if _, err := r.file.WriteString(line); err != nil {
+	if err := r.file.write(line); err != nil {
 		panic(err)
 	}
 	return nil
 }
 
-/*func (r *RemFile) clearFile() error {
-	return os.Remove(r.path)
-}*/
+func (r *RemFile) clearFile() error {
+	return r.file.clearFile()
+}
 
-/*func (r *RemFile) createLocalFile() error {
-	// Create history file in the current directory.
-	dir, err := os.Getwd()
-	if err != nil {
-		return err
-	}
-	localFile := path.Join(dir, r.filename)
-	file, err := os.OpenFile(localFile, os.O_CREATE, 0600)
-	defer file.Close()
-	if err != nil {
-		return err
-	}
-	return nil
-}*/
+func (r *RemFile) createLocalFile() error {
+	return r.file.createLocalFile()
+}
 
 func (r *RemFile) execute(cmdStr string) error {
 	// Replace the current process with the cmd.
@@ -211,11 +196,11 @@ func (r *RemFile) read() error {
 	lines := []*Line{}
 
 	// read history
-	r.setFile()
+	r.file.setFile(false)
 	defer r.file.Close()
-
+	fmt.Println(r.file)
 	// read lines
-	scanner := bufio.NewScanner(r.file)
+	scanner := bufio.NewScanner(r.file.file)
 	for scanner.Scan() {
 		// parse line
 		l := &Line{}
@@ -247,45 +232,13 @@ func (r *RemFile) removeLine(index int) error {
 	return err
 }
 
-/*func (r *RemFile) setFile() error {
-	// which mode to use to open file
-	var openFlags int
-	if r.appendTo {
-		openFlags = os.O_CREATE | os.O_APPEND | os.O_WRONLY
-	} else {
-		openFlags = os.O_CREATE | os.O_RDONLY
-	}
+func (r *RemFile) close() {
+	r.file.Close()
+}
 
-	// open history file
-	file, err := os.OpenFile(r.path, openFlags, 0600)
-	if err == nil {
-		r.file = file
-	}
-	return nil
-}*/
-
-/*func (r *RemFile) setPath() error {
-	// ignore current dir if global .rem file is wanted
-	if r.global == false {
-		// Set path to history file in current dir if one exists
-		dir, err := os.Getwd()
-		if err != nil {
-			return err
-		}
-		localFile := path.Join(dir, r.filename)
-		if _, err := os.Stat(localFile); err == nil {
-			r.path = localFile
-			return nil
-		}
-	}
-
-	// Set default path to rem's history file
-	usr, err := user.Current()
-	if err == nil {
-		r.path = path.Join(usr.HomeDir, r.filename)
-	}
-	return err
-}*/
+func (r *RemFile) setPath() error {
+	return r.file.setPath()
+}
 
 func toInt(str string) (int, error) {
 	integer, err := strconv.Atoi(str)
@@ -309,10 +262,13 @@ func main() {
 	flag.Parse()
 
 	rem := &RemFile{
-		filename: ".rem",
-		global:   *globalFlag,
+		global: *globalFlag,
+		file: &File{
+			filename: ".rem",
+		},
 	}
 	rem.setPath()
+	rem.read()
 
 	var err error
 	var index int

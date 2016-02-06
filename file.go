@@ -33,6 +33,10 @@ func (f *File) clearFile() error {
 	return os.Remove(f.path)
 }
 
+func (f *File) Close() {
+	f.file.Close()
+}
+
 func (f *File) setFile(appendTo bool) error {
 	// which mode to use to open file
 	var openFlags int
@@ -88,4 +92,11 @@ func (f *File) setPath() error {
 		f.path = path.Join(usr.HomeDir, f.filename)
 	}
 	return err
+}
+
+func (f *File) write(line string) error {
+	if _, err := f.file.WriteString(line); err != nil {
+		panic(err)
+	}
+	return nil
 }
