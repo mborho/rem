@@ -64,6 +64,7 @@ func TestSetPath(t *testing.T) {
 	if !match {
 		t.Errorf("Local non-existant path not pointing to home dir: %s", file.path)
 	}
+
 }
 
 func TestCreateLocalFile(t *testing.T) {
@@ -79,6 +80,60 @@ func TestCreateLocalFile(t *testing.T) {
 
 	if _, err := os.Stat(file.path); os.IsNotExist(err) {
 		t.Errorf("Local file was not created: %s", file.path)
+	}
+	defer removeTestFile(file.file)
+
+}
+
+func TestSetFile(t *testing.T) {
+
+	file := &File{
+		filename: ".rem_test_set_file",
+		global:   false,
+	}
+	if err := file.createLocalFile(); err != nil {
+		t.Errorf("Error creating local file: %s", file.path)
+	}
+
+	if err := file.setFile(false); err != nil {
+		t.Errorf("Error opening file: %s", file.path)
+	}
+
+	if _, err := os.Stat(file.path); os.IsNotExist(err) {
+		t.Errorf("Local file was not created: %s", file.path)
+	}
+
+	fileInfo, _ := file.file.Stat()
+	mode := int(0600)
+	if fileInfo.Mode() != os.FileMode(mode) {
+		t.Errorf("Wrong perms: %s", fileInfo.Mode())
+	}
+	defer removeTestFile(file.file)
+
+}
+
+func TestSetFileNoAppend(t *testing.T) {
+
+	file := &File{
+		filename: ".rem_test_set_file_no_append",
+		global:   false,
+	}
+	if err := file.createLocalFile(); err != nil {
+		t.Errorf("Error creating local file: %s", file.path)
+	}
+
+	if err := file.setFile(true); err != nil {
+		t.Errorf("Error opening file: %s", file.path)
+	}
+
+	if _, err := os.Stat(file.path); os.IsNotExist(err) {
+		t.Errorf("Local file was not created: %s", file.path)
+	}
+
+	fileInfo, _ := file.file.Stat()
+	mode := int(0600)
+	if fileInfo.Mode() != os.FileMode(mode) {
+		t.Errorf("Wrong perms: %s", fileInfo.Mode())
 	}
 	defer removeTestFile(file.file)
 }
