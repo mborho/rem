@@ -95,14 +95,6 @@ func (r *RemFile) appendLine(line, tag string) error {
 	return nil
 }
 
-func (r *RemFile) clearFile() error {
-	return r.file.clearFile()
-}
-
-func (r *RemFile) createLocalFile() error {
-	return r.file.createLocalFile()
-}
-
 func (r *RemFile) executeIndex(index int) error {
 	line, err := r.getLine(index)
 	if err != nil {
@@ -258,9 +250,9 @@ func main() {
 	case (remCmd == "help" || *helpFlag == true):
 		fmt.Println(help)
 	case remCmd == "here":
-		err = rem.createLocalFile()
+		err = rem.file.createLocalFile()
 	case remCmd == "clear":
-		err = rem.clearFile()
+		err = rem.file.clearFile()
 	case (remCmd == "add" || *addFlag == true):
 		startIndex := 1
 		if *addFlag == true {
