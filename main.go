@@ -23,11 +23,9 @@ import (
 	"fmt"
 	"io/ioutil"
 	"os"
-	"os/exec"
 	"regexp"
 	"strconv"
 	"strings"
-	"syscall"
 	"text/tabwriter"
 )
 
@@ -105,36 +103,18 @@ func (r *RemFile) createLocalFile() error {
 	return r.file.createLocalFile()
 }
 
-func (r *RemFile) execute(cmdStr string) error {
-	// Replace the current process with the cmd.
-	cmdParts := strings.Split(cmdStr, " ")
-
-	// absolute path to cmd
-	execPath, err := exec.LookPath(cmdParts[0])
-	if err != nil {
-		return err
-	}
-
-	// replace the current process
-	env := os.Environ()
-	syscall.Exec(execPath, cmdParts, env)
-	return nil
-}
-
 func (r *RemFile) executeIndex(index int) error {
-	r.read()
-	cmdStr, err := r.getLine(index)
+	line, err := r.getLine(index)
 	if err != nil {
 		return err
 	}
-	return r.execute(cmdStr)
+	return line.execute()
 }
 
 func (r *RemFile) executeTag(tag string) error {
-	r.read()
 	for _, line := range r.lines {
 		if line.tag == tag {
-			return r.execute(line.cmd)
+			return line.execute()
 		}
 	}
 	return errors.New("Tag not found.")
@@ -142,7 +122,6 @@ func (r *RemFile) executeTag(tag string) error {
 
 func (r *RemFile) filterLines(filter string) error {
 	// Print lines filtered by string (regular expression).
-	r.read()
 	for x, line := range r.lines {
 		matched, err := regexp.MatchString("(?i)"+filter, line.cmd)
 		if err != nil {
@@ -155,12 +134,12 @@ func (r *RemFile) filterLines(filter string) error {
 	return nil
 }
 
-func (r *RemFile) getLine(index int) (string, error) {
+func (r *RemFile) getLine(index int) (*Line, error) {
 	// Returns command by index.
 	if len(r.lines) <= index {
-		return "", errors.New("Index out of range.")
+		return nil, errors.New("Index out of range.")
 	}
-	return r.lines[index].cmd, nil
+	return r.lines[index], nil
 }
 
 func (r *RemFile) getTabWriter() *tabwriter.Writer {
@@ -171,7 +150,6 @@ func (r *RemFile) getTabWriter() *tabwriter.Writer {
 func (r *RemFile) printAllLines() {
 	// Print saved lines enumerated
 	w := r.getTabWriter()
-	r.read()
 
 	// print out, ignore tags if no tags are present
 	for x, line := range r.lines {
@@ -182,12 +160,11 @@ func (r *RemFile) printAllLines() {
 
 func (r *RemFile) printLine(index int) error {
 	// Print saved cmd by line
-	r.read()
-	cmd, err := r.getLine(index)
+	line, err := r.getLine(index)
 	if err != nil {
 		return err
 	}
-	fmt.Println(cmd)
+	fmt.Println(line.cmd)
 	return nil
 }
 
@@ -198,7 +175,7 @@ func (r *RemFile) read() error {
 	// read history
 	r.file.setFile(false)
 	defer r.file.Close()
-	fmt.Println(r.file)
+
 	// read lines
 	scanner := bufio.NewScanner(r.file.file)
 	for scanner.Scan() {
@@ -222,7 +199,6 @@ func (r *RemFile) read() error {
 
 func (r *RemFile) removeLine(index int) error {
 	// Removes a line from the rem file at given index.
-	r.read()
 	lines := []string{}
 	for _, line := range append(r.lines[:index], r.lines[index+1:]...) {
 		lines = append(lines, line.line)

@@ -18,7 +18,11 @@ package main
 
 import (
 	"fmt"
+	"os"
+	"os/exec"
 	"regexp"
+	"strings"
+	"syscall"
 	"text/tabwriter"
 )
 
@@ -39,6 +43,22 @@ func (l *Line) read(line string) {
 		// no tag found, simple command
 		l.cmd = line
 	}
+}
+
+func (l *Line) execute() error {
+	// Replace the current process with the cmd.
+	cmdParts := strings.Split(l.cmd, " ")
+
+	// absolute path to cmd
+	execPath, err := exec.LookPath(cmdParts[0])
+	if err != nil {
+		return err
+	}
+
+	// replace the current process
+	env := os.Environ()
+	syscall.Exec(execPath, cmdParts, env)
+	return nil
 }
 
 // Prints line to tabwriter.
