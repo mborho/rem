@@ -120,7 +120,7 @@ func (r *RemFile) filterLines(filter string) error {
 			return nil
 		}
 		if matched {
-			fmt.Printf(" %d  %s\n", x, line)
+			fmt.Printf(" %d  %s\n", x, line.cmd)
 		}
 	}
 	return nil
