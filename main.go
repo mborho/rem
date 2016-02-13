@@ -161,6 +161,7 @@ func (r *RemFile) printLine(index int) error {
 }
 
 func (r *RemFile) read() error {
+	r.file.setPath()
 	// Read lines from the history file.
 	lines := []*Line{}
 
@@ -209,10 +210,6 @@ func (r *RemFile) close() {
 	r.file.Close()
 }
 
-func (r *RemFile) setPath() error {
-	return r.file.setPath()
-}
-
 func toInt(str string) (int, error) {
 	integer, err := strconv.Atoi(str)
 	if err != nil {
@@ -240,7 +237,6 @@ func main() {
 			filename: ".rem",
 		},
 	}
-	rem.setPath()
 	rem.read()
 
 	var err error
