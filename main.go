@@ -81,7 +81,7 @@ type RemFile struct {
 func (r *RemFile) appendLine(line, tag string) error {
 	// Append line to the history file
 	r.file.setFile(true)
-	defer r.close()
+	defer r.file.Close()
 
 	if tag != "" {
 		line = fmt.Sprintf("#%s#%s\n", tag, line)
@@ -204,10 +204,6 @@ func (r *RemFile) removeLine(index int) error {
 	newLines := append([]byte(strings.Join(lines, "\n")), byte('\n'))
 	err := ioutil.WriteFile(r.file.path, newLines, 0644)
 	return err
-}
-
-func (r *RemFile) close() {
-	r.file.Close()
 }
 
 func toInt(str string) (int, error) {
