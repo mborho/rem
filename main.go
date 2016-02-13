@@ -70,7 +70,7 @@ EXAMPLES:
     `
 }
 
-type RemFile struct {
+type Rem struct {
 	path    string
 	lines   []*Line
 	hasTags bool
@@ -78,7 +78,7 @@ type RemFile struct {
 	global  bool
 }
 
-func (r *RemFile) appendLine(line, tag string) error {
+func (r *Rem) appendLine(line, tag string) error {
 	// Append line to the history file
 	r.file.setFile(true)
 	defer r.file.Close()
@@ -95,7 +95,7 @@ func (r *RemFile) appendLine(line, tag string) error {
 	return nil
 }
 
-func (r *RemFile) executeIndex(index int) error {
+func (r *Rem) executeIndex(index int) error {
 	line, err := r.getLine(index)
 	if err != nil {
 		return err
@@ -103,7 +103,7 @@ func (r *RemFile) executeIndex(index int) error {
 	return line.execute()
 }
 
-func (r *RemFile) executeTag(tag string) error {
+func (r *Rem) executeTag(tag string) error {
 	for _, line := range r.lines {
 		if line.tag == tag {
 			return line.execute()
@@ -112,7 +112,7 @@ func (r *RemFile) executeTag(tag string) error {
 	return errors.New("Tag not found.")
 }
 
-func (r *RemFile) filterLines(filter string) error {
+func (r *Rem) filterLines(filter string) error {
 	// Print lines filtered by string (regular expression).
 	for x, line := range r.lines {
 		matched, err := regexp.MatchString("(?i)"+filter, line.cmd)
@@ -126,7 +126,7 @@ func (r *RemFile) filterLines(filter string) error {
 	return nil
 }
 
-func (r *RemFile) getLine(index int) (*Line, error) {
+func (r *Rem) getLine(index int) (*Line, error) {
 	// Returns command by index.
 	if len(r.lines) <= index {
 		return nil, errors.New("Index out of range.")
@@ -134,12 +134,12 @@ func (r *RemFile) getLine(index int) (*Line, error) {
 	return r.lines[index], nil
 }
 
-func (r *RemFile) getTabWriter() *tabwriter.Writer {
+func (r *Rem) getTabWriter() *tabwriter.Writer {
 	// Returns new instance of a tabwriter
 	return tabwriter.NewWriter(os.Stdout, 1, 0, 2, ' ', tabwriter.DiscardEmptyColumns)
 }
 
-func (r *RemFile) printAllLines() {
+func (r *Rem) printAllLines() {
 	// Print saved lines enumerated
 	w := r.getTabWriter()
 
@@ -150,7 +150,7 @@ func (r *RemFile) printAllLines() {
 	w.Flush()
 }
 
-func (r *RemFile) printLine(index int) error {
+func (r *Rem) printLine(index int) error {
 	// Print saved cmd by line
 	line, err := r.getLine(index)
 	if err != nil {
@@ -160,7 +160,7 @@ func (r *RemFile) printLine(index int) error {
 	return nil
 }
 
-func (r *RemFile) read() error {
+func (r *Rem) read() error {
 	r.file.setPath()
 	// Read lines from the history file.
 	lines := []*Line{}
@@ -190,7 +190,7 @@ func (r *RemFile) read() error {
 	return nil
 }
 
-func (r *RemFile) removeLine(index int) error {
+func (r *Rem) removeLine(index int) error {
 	// Removes a line from the rem file at given index.
 	lines := []string{}
 	// check line exists
@@ -227,7 +227,7 @@ func main() {
 	filter := flag.String("f", "", "List commands by regexp filter.")
 	flag.Parse()
 
-	rem := &RemFile{
+	rem := &Rem{
 		global: *globalFlag,
 		file: &File{
 			filename: ".rem",
