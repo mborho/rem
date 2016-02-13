@@ -17,11 +17,8 @@
 package main
 
 import (
-	"errors"
 	"flag"
 	"fmt"
-	"os"
-	"strconv"
 	"strings"
 )
 
@@ -64,19 +61,6 @@ EXAMPLES:
     rem rm 4 - Removes line 4.
     rem - Lists all stored commands.
     `
-}
-
-func toInt(str string) (int, error) {
-	integer, err := strconv.Atoi(str)
-	if err != nil {
-		return 0, errors.New("Need index number.")
-	}
-	return integer, err
-}
-
-func exit(msg error) {
-	fmt.Println(msg)
-	os.Exit(1)
 }
 
 func main() {
