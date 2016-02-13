@@ -200,11 +200,16 @@ func (r *RemFile) read() error {
 func (r *RemFile) removeLine(index int) error {
 	// Removes a line from the rem file at given index.
 	lines := []string{}
+	// check line exists
+	if index >= len(r.lines) {
+		return errors.New("Line does not exist!")
+	}
+	// build new slices
 	for _, line := range append(r.lines[:index], r.lines[index+1:]...) {
 		lines = append(lines, line.line)
 	}
 	newLines := append([]byte(strings.Join(lines, "\n")), byte('\n'))
-	err := ioutil.WriteFile(r.path, newLines, 0644)
+	err := ioutil.WriteFile(r.file.path, newLines, 0644)
 	return err
 }
 
