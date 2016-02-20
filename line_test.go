@@ -1,6 +1,8 @@
 package main
 
 import (
+	"bytes"
+	"strings"
 	"testing"
 )
 
@@ -40,4 +42,38 @@ func TestExecute(t *testing.T) {
 		t.Errorf("Command was executed without error: %s", l.cmd)
 	}
 
+}
+
+func TestPrint(t *testing.T) {
+	// test without tag
+	l := &Line{
+		cmd: "echo foobar",
+	}
+	var b bytes.Buffer
+	l.print(&b, 2, false)
+
+	if strings.Compare(b.String(), " 2\techo foobar\n") != 0 {
+		t.Error("Line was printed incorrect.")
+	}
+
+	// test with tag but without line tag
+	l = &Line{
+		cmd: "foo",
+	}
+	var d bytes.Buffer
+	l.print(&d, 3, true)
+	if strings.Compare(d.String(), " 3\t - \tfoo\n") != 0 {
+		t.Error("Line was printed incorrect.")
+	}
+
+	// test with tag
+	l = &Line{
+		tag: "foo",
+		cmd: "bar",
+	}
+	var c bytes.Buffer
+	l.print(&c, 4, true)
+	if strings.Compare(c.String(), " 4\tfoo\tbar\n") != 0 {
+		t.Error("Line with tag was printed incorrect.")
+	}
 }
