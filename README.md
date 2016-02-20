@@ -1,5 +1,7 @@
 # rem - remember
 
+[![Build Status](https://travis-ci.org/mborho/rem.svg?branch=master)](https://travis-ci.org/mborho/rem)
+
 rem is a small tool for remembering things on the command line. It can be used to store commands and execute them later on. Or to simply store lines of text.
 
 ### Usage
