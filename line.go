@@ -18,12 +18,12 @@ package main
 
 import (
 	"fmt"
+	"io"
 	"os"
 	"os/exec"
 	"regexp"
 	"strings"
 	"syscall"
-	"text/tabwriter"
 )
 
 type Line struct {
@@ -62,7 +62,7 @@ func (l *Line) execute() error {
 }
 
 // Prints line to tabwriter.
-func (l *Line) print(w *tabwriter.Writer, index int, withTag bool) {
+func (l *Line) print(w io.Writer, index int, withTag bool) {
 	if withTag {
 		tag := ""
 		if tag = l.tag; tag == "" {
