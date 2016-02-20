@@ -4,7 +4,7 @@ rem is a small tool for remembering things on the command line. It can be used t
 
 ### Usage
 ```sh
-$ rem command [argument]
+$ rem [flags] command [argument]
 ```
 
 ### Commands
