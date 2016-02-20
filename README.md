@@ -31,7 +31,7 @@ Run **rem** without any arguments to list all stored commands/strings.
 ```sh
 $ git clone https://github.com/mborho/rem
 $ cd rem
-$ GOPATH=`pwd` go build -o rem main.go line.go
+$ GOPATH=`pwd` go build -o rem main.go line.go file.go utils.go rem.go help.go cli.go
 $ ./rem
 ```
 
