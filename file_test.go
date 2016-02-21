@@ -31,7 +31,7 @@ func removeTestFile(f *os.File) {
 func TestSetPath(t *testing.T) {
 
 	file := &File{
-		filename: ".rem_test",
+		filename: ".rem_test_file",
 	}
 	err := file.setPath()
 	if err != nil {
@@ -56,7 +56,7 @@ func TestSetPath(t *testing.T) {
 	}
 
 	// test with existing local file
-	f, err := os.Create(".rem_test")
+	f, err := os.Create(".rem_test_file")
 	defer removeTestFile(f)
 
 	err = file.setPath()
