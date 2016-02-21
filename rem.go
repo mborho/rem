@@ -159,6 +159,6 @@ func (r *Rem) removeLine(index int) error {
 		lines = append(lines, line.line)
 	}
 	newLines := append([]byte(strings.Join(lines, "\n")), byte('\n'))
-	err := ioutil.WriteFile(r.file.path, newLines, 0644)
+	err := ioutil.WriteFile(r.filepath, newLines, 0644)
 	return err
 }

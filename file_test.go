@@ -38,9 +38,9 @@ func TestSetPath(t *testing.T) {
 		t.Error("Error when setting path.")
 	}
 
-	match, _ := regexp.MatchString("/home/[^/]+/"+file.filename, file.path)
+	match, _ := regexp.MatchString("/home/[^/]+/"+file.filename, file.filepath)
 	if !match {
-		t.Errorf("Filepath not in $home: %s", file.path)
+		t.Errorf("Filepath not in $home: %s", file.filepath)
 	}
 
 	// test with global flag, not non-existant local file
@@ -50,9 +50,9 @@ func TestSetPath(t *testing.T) {
 		t.Error("Error when setting non-exsiting global path.")
 	}
 
-	match, _ = regexp.MatchString("/home/[^/]+/"+file.filename, file.path)
+	match, _ = regexp.MatchString("/home/[^/]+/"+file.filename, file.filepath)
 	if !match {
-		t.Errorf("Local non-existant path not pointing to home dir: %s", file.path)
+		t.Errorf("Local non-existant path not pointing to home dir: %s", file.filepath)
 	}
 
 	// test with existing local file
@@ -60,9 +60,9 @@ func TestSetPath(t *testing.T) {
 	defer removeTestFile(f)
 
 	err = file.setPath()
-	match, _ = regexp.MatchString("/home/.+/"+file.filename+"$", file.path)
+	match, _ = regexp.MatchString("/home/.+/"+file.filename+"$", file.filepath)
 	if !match {
-		t.Errorf("Local non-existant path not pointing to home dir: %s", file.path)
+		t.Errorf("Local non-existant path not pointing to home dir: %s", file.filepath)
 	}
 
 }
@@ -78,8 +78,8 @@ func TestCreateLocalFile(t *testing.T) {
 		t.Errorf("Error when creating local file.")
 	}
 
-	if _, err := os.Stat(file.path); os.IsNotExist(err) {
-		t.Errorf("Local file was not created: %s", file.path)
+	if _, err := os.Stat(file.filepath); os.IsNotExist(err) {
+		t.Errorf("Local file was not created: %s", file.filepath)
 	}
 	defer removeTestFile(file.file)
 
@@ -92,15 +92,15 @@ func TestSetFile(t *testing.T) {
 		global:   false,
 	}
 	if err := file.createLocalFile(); err != nil {
-		t.Errorf("Error creating local file: %s", file.path)
+		t.Errorf("Error creating local file: %s", file.filepath)
 	}
 
 	if err := file.setFile(false); err != nil {
-		t.Errorf("Error opening file: %s", file.path)
+		t.Errorf("Error opening file: %s", file.filepath)
 	}
 
-	if _, err := os.Stat(file.path); os.IsNotExist(err) {
-		t.Errorf("Local file was not created: %s", file.path)
+	if _, err := os.Stat(file.filepath); os.IsNotExist(err) {
+		t.Errorf("Local file was not created: %s", file.filepath)
 	}
 
 	fileInfo, _ := file.file.Stat()
@@ -119,15 +119,15 @@ func TestSetFileNoAppend(t *testing.T) {
 		global:   false,
 	}
 	if err := file.createLocalFile(); err != nil {
-		t.Errorf("Error creating local file: %s", file.path)
+		t.Errorf("Error creating local file: %s", file.filepath)
 	}
 
 	if err := file.setFile(true); err != nil {
-		t.Errorf("Error opening file: %s", file.path)
+		t.Errorf("Error opening file: %s", file.filepath)
 	}
 
-	if _, err := os.Stat(file.path); os.IsNotExist(err) {
-		t.Errorf("Local file was not created: %s", file.path)
+	if _, err := os.Stat(file.filepath); os.IsNotExist(err) {
+		t.Errorf("Local file was not created: %s", file.filepath)
 	}
 
 	fileInfo, _ := file.file.Stat()

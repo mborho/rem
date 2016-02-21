@@ -23,14 +23,14 @@ import (
 )
 
 type File struct {
-	path     string
+	filepath string
 	filename string
 	file     *os.File
 	global   bool
 }
 
 func (f *File) clearFile() error {
-	return os.Remove(f.path)
+	return os.Remove(f.filepath)
 }
 
 func (f *File) Close() {
@@ -47,7 +47,7 @@ func (f *File) setFile(appendTo bool) error {
 	}
 
 	// open history file
-	file, err := os.OpenFile(f.path, openFlags, 0600)
+	file, err := os.OpenFile(f.filepath, openFlags, 0600)
 	if err == nil {
 		f.file = file
 	}
@@ -67,7 +67,7 @@ func (f *File) createLocalFile() error {
 		return err
 	}
 
-	f.path = localFile
+	f.filepath = localFile
 	return nil
 }
 
@@ -81,7 +81,7 @@ func (f *File) setPath() error {
 		}
 		localFile := path.Join(dir, f.filename)
 		if _, err := os.Stat(localFile); err == nil {
-			f.path = localFile
+			f.filepath = localFile
 			return nil
 		}
 	}
@@ -89,7 +89,7 @@ func (f *File) setPath() error {
 	// Set default path to rem's history file
 	usr, err := user.Current()
 	if err == nil {
-		f.path = path.Join(usr.HomeDir, f.filename)
+		f.filepath = path.Join(usr.HomeDir, f.filename)
 	}
 	return err
 }
