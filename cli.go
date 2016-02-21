@@ -35,7 +35,7 @@ func run() error {
 	// build rem type
 	rem := &Rem{
 		global: *globalFlag,
-		file: &File{
+		File: File{
 			filename: ".rem",
 		},
 	}
@@ -49,9 +49,9 @@ func run() error {
 	case (remCmd == "help" || *helpFlag == true):
 		fmt.Println(help)
 	case remCmd == "here":
-		err = rem.file.createLocalFile()
+		err = rem.createLocalFile()
 	case remCmd == "clear":
-		err = rem.file.clearFile()
+		err = rem.clearFile()
 	case (remCmd == "add" || *addFlag == true):
 		startIndex := 1
 		if *addFlag == true {

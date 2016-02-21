@@ -31,22 +31,22 @@ type Rem struct {
 	path    string
 	lines   []*Line
 	hasTags bool
-	file    *File
-	global  bool
+	File
+	global bool
 }
 
 func (r *Rem) appendLine(line, tag string) error {
 	// Append line to the history file
-	r.file.setFile(true)
-	defer r.file.Close()
+	r.setFile(true)
+	defer r.Close()
 
 	if tag != "" {
 		line = fmt.Sprintf("#%s#%s\n", tag, line)
 	} else {
 		line = fmt.Sprintf("%s\n", line)
 	}
-	//if _, err := r.file.WriteString(line); err != nil {
-	if err := r.file.write(line); err != nil {
+	//if _, err := r.WriteString(line); err != nil {
+	if err := r.write(line); err != nil {
 		panic(err)
 	}
 	return nil
@@ -118,16 +118,16 @@ func (r *Rem) printLine(index int) error {
 }
 
 func (r *Rem) read() error {
-	r.file.setPath()
+	r.setPath()
 	// Read lines from the history file.
 	lines := []*Line{}
 
 	// read history
-	r.file.setFile(false)
-	defer r.file.Close()
+	r.setFile(false)
+	defer r.Close()
 
 	// read lines
-	scanner := bufio.NewScanner(r.file.file)
+	scanner := bufio.NewScanner(r.file)
 	for scanner.Scan() {
 		// parse line
 		l := &Line{}
