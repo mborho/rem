@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"io/ioutil"
 	"os"
 	"testing"
@@ -126,7 +127,28 @@ func TestFilterLines(t *testing.T) {
 	}
 }
 
+func TestFilterNoLines(t *testing.T) {
+	rescueStdout := os.Stdout
+	r, w, _ := os.Pipe()
+	os.Stdout = w
+
+	rem := getTestRem(t)
+	defer removeRemFile(rem)
+	rem.read()
+
+	rem.filterLines("nothing")
+
+	w.Close()
+	out, _ := ioutil.ReadAll(r)
+	os.Stdout = rescueStdout
+
+	if string(out) != "" {
+		t.Errorf("Filtered lines, got %s", out)
+	}
+}
+
 func TestAddLineWithTag(t *testing.T) {
+	// add line
 	rem := getTestRem(t)
 	defer removeRemFile(rem)
 	rem.read()
@@ -135,6 +157,7 @@ func TestAddLineWithTag(t *testing.T) {
 		t.Errorf("Error when appending line, got %s", err)
 	}
 
+	// check if line was added
 	rem = &Rem{
 		global: false,
 		File: File{
@@ -162,6 +185,7 @@ func TestAddLineWithTag(t *testing.T) {
 }
 
 func TestAddLineWithoutTag(t *testing.T) {
+	// add lines
 	rem := getTestRem(t)
 	defer removeRemFile(rem)
 	rem.read()
@@ -170,6 +194,7 @@ func TestAddLineWithoutTag(t *testing.T) {
 		t.Errorf("Error when appending line, got %s", err)
 	}
 
+	// check if line was added
 	rem = &Rem{
 		global: false,
 		File: File{
@@ -194,4 +219,41 @@ func TestAddLineWithoutTag(t *testing.T) {
 	if rem.lines[3].tag != "" {
 		t.Errorf("Tag was saved, got %s", rem.lines[3].tag)
 	}
+}
+
+func TestRemoveLine(t *testing.T) {
+	// remove line
+	rem := getTestRem(t)
+	defer removeRemFile(rem)
+	rem.read()
+
+	if rem.lines[2].cmd != "echo test" {
+		t.Error("Line does not exist")
+	}
+
+	err := rem.removeLine(3)
+	if fmt.Sprintf("%s", err) != "Line does not exist!" {
+		t.Error("Non existant line exists.")
+	}
+
+	if err = rem.removeLine(2); err != nil {
+		t.Errorf("Error when removing line, got %s", err)
+	}
+
+	// check if line was removed
+	rem = &Rem{
+		global: false,
+		File: File{
+			filename: remfile,
+		},
+	}
+	rem.read()
+
+	if len(rem.lines) != 2 {
+		t.Error("Line was not removed")
+	}
+	if rem.lines[0].cmd != "ls" && rem.lines[1].cmd != "ls -la" {
+		t.Error("Wrong line was not removed")
+	}
+
 }
