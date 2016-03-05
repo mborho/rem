@@ -17,6 +17,7 @@
 package main
 
 import (
+	_ "fmt"
 	"os"
 	"os/user"
 	"path"
