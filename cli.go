@@ -23,7 +23,7 @@ import (
 )
 
 // Reads command line arguments and runs rem.
-func run() error {
+func run(remfile string) error {
 	// read flags
 	globalFlag := flag.Bool("g", false, "use global rem file")
 	helpFlag := flag.Bool("h", false, "show this help")
@@ -36,7 +36,7 @@ func run() error {
 	rem := &Rem{
 		global: *globalFlag,
 		File: File{
-			filename: ".rem",
+			filename: remfile,
 		},
 	}
 	rem.read()
