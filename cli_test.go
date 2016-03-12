@@ -30,6 +30,42 @@ func TestRunDefault(t *testing.T) {
 	}
 }
 
+func TestRunRmAdd(t *testing.T) {
+	// create test file
+	rem := getTestRem(t)
+	defer removeRemFile(rem)
+	rem.read()
+
+	// remove line with index 1
+	os.Args = []string{"", "rm", "1"}
+	err := run(testRemFile)
+	if err != nil {
+		t.Error("Error when calling without argument!")
+	}
+
+	// add line
+	os.Args = []string{"", "add", "pwd"}
+	err = run(testRemFile)
+	if err != nil {
+		t.Error("Error when calling without argument!")
+	}
+
+	// list all commands
+	rescueStdout := os.Stdout
+	r, w, _ := os.Pipe()
+	os.Stdout = w
+
+	os.Args = []string{""}
+	err = run(testRemFile)
+
+	w.Close()
+	out, _ := ioutil.ReadAll(r)
+	os.Stdout = rescueStdout
+	if string(out) != " 0  ls\n 1  echo test\n 2  pwd\n" {
+		t.Errorf("Wrong line output, got %s", out)
+	}
+}
+
 func TestRunPrintLine(t *testing.T) {
 	// create test file
 	rem := getTestRem(t)
