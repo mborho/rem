@@ -8,11 +8,11 @@ import (
 )
 
 var (
-	remfile string
+	testRemFile string
 )
 
 func init() {
-	remfile = ".rem_test"
+	testRemFile = ".rem_test"
 }
 
 func removeRemFile(r *Rem) {
@@ -21,14 +21,14 @@ func removeRemFile(r *Rem) {
 
 func getTestRem(t *testing.T) *Rem {
 	cmds := []byte("ls\n#foo#ls -la\necho test\n")
-	if err := ioutil.WriteFile(remfile, cmds, 0644); err != nil {
+	if err := ioutil.WriteFile(testRemFile, cmds, 0644); err != nil {
 		t.Fatalf("Cannot create rem testfile, %s", err)
 	}
 
 	rem := &Rem{
 		global: false,
 		File: File{
-			filename: remfile,
+			filename: testRemFile,
 		},
 	}
 	/*if err := rem.createLocalFile(); err != nil {
@@ -161,7 +161,7 @@ func TestAddLineWithTag(t *testing.T) {
 	rem = &Rem{
 		global: false,
 		File: File{
-			filename: remfile,
+			filename: testRemFile,
 		},
 	}
 	rem.read()
@@ -198,7 +198,7 @@ func TestAddLineWithoutTag(t *testing.T) {
 	rem = &Rem{
 		global: false,
 		File: File{
-			filename: remfile,
+			filename: testRemFile,
 		},
 	}
 	rem.read()
@@ -244,7 +244,7 @@ func TestRemoveLine(t *testing.T) {
 	rem = &Rem{
 		global: false,
 		File: File{
-			filename: remfile,
+			filename: testRemFile,
 		},
 	}
 	rem.read()

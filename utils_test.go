@@ -1,9 +1,9 @@
 package main
 
 import (
-	"errors"
-	"os"
-	"os/exec"
+	_ "errors"
+	_ "os"
+	_ "os/exec"
 	"testing"
 )
 
@@ -30,7 +30,7 @@ func TestToInt(t *testing.T) {
 
 }
 
-func TestExit(t *testing.T) {
+/*func TestExit(t *testing.T) {
 	exitError := errors.New("Test-Error")
 	if os.Getenv("BE_CRASHER") == "1" {
 		exit(exitError)
@@ -43,4 +43,4 @@ func TestExit(t *testing.T) {
 		return
 	}
 	t.Fatalf("Process ran with err %v, want exit status 1", err)
-}
+}*/

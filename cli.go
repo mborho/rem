@@ -22,14 +22,25 @@ import (
 	"strings"
 )
 
+var (
+	globalFlag *bool
+	helpFlag   *bool
+	addFlag    *bool
+	tagFlag    *string
+	filter     *string
+)
+
+func init() {
+	// read flags
+	globalFlag = flag.Bool("g", false, "use global rem file")
+	helpFlag = flag.Bool("h", false, "show this help")
+	addFlag = flag.Bool("a", false, "add a command")
+	tagFlag = flag.String("t", "", "tag for command")
+	filter = flag.String("f", "", "List commands by regexp filter.")
+}
+
 // Reads command line arguments and runs rem.
 func run(remfile string) error {
-	// read flags
-	globalFlag := flag.Bool("g", false, "use global rem file")
-	helpFlag := flag.Bool("h", false, "show this help")
-	addFlag := flag.Bool("a", false, "add a command")
-	tagFlag := flag.String("t", "", "tag for command")
-	filter := flag.String("f", "", "List commands by regexp filter.")
 	flag.Parse()
 
 	// build rem type
@@ -44,6 +55,7 @@ func run(remfile string) error {
 	// check flags and run specific method.
 	var err error
 	var index int
+	//fmt.Println("%+v", flag.Args())
 	remCmd := flag.Arg(0)
 	switch {
 	case (remCmd == "help" || *helpFlag == true):
