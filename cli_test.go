@@ -66,6 +66,38 @@ func TestRunRmAdd(t *testing.T) {
 	}
 }
 
+/*func TestRunAddFlag(t *testing.T) {
+	// create test file
+	rem := getTestRem(t)
+	defer removeRemFile(rem)
+	rem.read()
+
+	// add line
+    tagStr := ""
+	tagFlag = &tagStr
+	os.Args = []string{"", "-a", "pwd"}
+	err := run(testRemFile+"1")
+	if err != nil {
+		t.Error("Error when adding line!")
+	}
+
+	// list all commands
+	rescueStdout := os.Stdout
+	r, w, _ := os.Pipe()
+	os.Stdout = w
+
+	os.Args = []string{""}
+	err = run(testRemFile+"1")
+
+	w.Close()
+	out, _ := ioutil.ReadAll(r)
+	os.Stdout = rescueStdout
+    t.Log(string(out))
+	if string(out) != " 0   -   ls\n 1  foo  ls -la\n 2   -   echo test\n 3  -  pwd\n" {
+		t.Errorf("Wrong line output, got %s", out)
+	}
+}*/
+
 func TestRunPrintLine(t *testing.T) {
 	// create test file
 	rem := getTestRem(t)
@@ -87,6 +119,54 @@ func TestRunPrintLine(t *testing.T) {
 	os.Stdout = rescueStdout
 	if string(out) != "ls -la\n" {
 		t.Errorf("Wrong line output, got %s", out)
+	}
+}
+
+func TestRunFilter(t *testing.T) {
+	// create test file
+	rem := getTestRem(t)
+	defer removeRemFile(rem)
+	rem.read()
+
+	rescueStdout := os.Stdout
+	r, w, _ := os.Pipe()
+	os.Stdout = w
+
+	os.Args = []string{"", "filter", "echo"}
+
+	err := run(testRemFile)
+	if err != nil {
+		t.Error("Error when filter lines!")
+	}
+	w.Close()
+	out, _ := ioutil.ReadAll(r)
+	os.Stdout = rescueStdout
+	if string(out) != " 2  echo test\n" {
+		t.Errorf("Wrong filter output, got %s", out)
+	}
+}
+
+func TestRunFilterFlag(t *testing.T) {
+	// create test file
+	rem := getTestRem(t)
+	defer removeRemFile(rem)
+	rem.read()
+
+	rescueStdout := os.Stdout
+	r, w, _ := os.Pipe()
+	os.Stdout = w
+
+	os.Args = []string{"", "-f", "echo"}
+
+	err := run(testRemFile)
+	if err != nil {
+		t.Error("Error when filter lines!")
+	}
+	w.Close()
+	out, _ := ioutil.ReadAll(r)
+	os.Stdout = rescueStdout
+	if string(out) != " 2  echo test\n" {
+		t.Errorf("Wrong filter output, got %s", out)
 	}
 }
 
