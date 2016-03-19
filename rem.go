@@ -32,7 +32,6 @@ type Rem struct {
 	lines   []*Line
 	hasTags bool
 	File
-	global bool
 }
 
 func (r *Rem) appendLine(line, tag string) error {

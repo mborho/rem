@@ -45,9 +45,9 @@ func run(remfile string) error {
 
 	// build rem type
 	rem := &Rem{
-		global: *globalFlag,
 		File: File{
 			filename: remfile,
+			global:   *globalFlag,
 		},
 	}
 	rem.read()
