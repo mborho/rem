@@ -26,9 +26,9 @@ func getTestRem(t *testing.T) *Rem {
 	}
 
 	rem := &Rem{
-		global: false,
 		File: File{
 			filename: testRemFile,
+			global:   false,
 		},
 	}
 	/*if err := rem.createLocalFile(); err != nil {
@@ -159,9 +159,9 @@ func TestAddLineWithTag(t *testing.T) {
 
 	// check if line was added
 	rem = &Rem{
-		global: false,
 		File: File{
 			filename: testRemFile,
+			global:   false,
 		},
 	}
 	rem.read()
@@ -196,9 +196,9 @@ func TestAddLineWithoutTag(t *testing.T) {
 
 	// check if line was added
 	rem = &Rem{
-		global: false,
 		File: File{
 			filename: testRemFile,
+			global:   false,
 		},
 	}
 	rem.read()
@@ -242,9 +242,9 @@ func TestRemoveLine(t *testing.T) {
 
 	// check if line was removed
 	rem = &Rem{
-		global: false,
 		File: File{
 			filename: testRemFile,
+			global:   false,
 		},
 	}
 	rem.read()
