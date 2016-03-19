@@ -31,7 +31,7 @@ USAGE:
 
 
 VERSION:
-    0.8.0
+    0.9.0
 
 COMMANDS:
     -h, help - Shows this help.
