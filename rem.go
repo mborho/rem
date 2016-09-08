@@ -56,13 +56,13 @@ func (r *Rem) executeIndex(index int) error {
 	if err != nil {
 		return err
 	}
-	return line.execute()
+	return line.dispatch()
 }
 
 func (r *Rem) executeTag(tag string) error {
 	for _, line := range r.lines {
 		if line.tag == tag {
-			return line.execute()
+			return line.dispatch()
 		}
 	}
 	return errors.New("Tag not found.")
