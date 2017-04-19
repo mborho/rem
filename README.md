@@ -29,6 +29,11 @@ $ rem [flags] command [argument]
 
 Run **rem** without any arguments to list all stored commands/strings.
 
+### Install
+```
+$ go get github.com/mborho/rem
+```
+
 ### Build & Run
 
 ```sh
@@ -38,7 +43,7 @@ $ GOPATH=`pwd` go build -o rem main.go line.go file.go utils.go rem.go help.go c
 $ ./rem
 ```
 
-### PPA ##
+### PPA (deprecated)
 rem is installable on Ubuntu x86_64 via [ppa:martin-borho/rem](https://launchpad.net/~martin-borho/+archive/ubuntu/rem)
 
 
