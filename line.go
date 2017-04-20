@@ -45,6 +45,18 @@ func (l *Line) read(line string) {
 	}
 }
 
+// Execute cmd or print to stdout
+func (l *Line) dispatch() error {
+	if strings.HasPrefix(l.cmd, "cd ") {
+		fmt.Fprint(os.Stdout, l.cmd[3:len(l.cmd)])
+	} else {
+		// Not a change directory
+		l.execute()
+	}
+	
+	return nil
+}
+
 func (l *Line) execute() error {
 	// Replace the current process with the cmd.
 	cmdParts := strings.Split(l.cmd, " ")
