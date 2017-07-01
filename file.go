@@ -72,6 +72,15 @@ func (f *File) createLocalFile() error {
 	return nil
 }
 
+func (f *File) checkPath(dir string) bool {
+	// Checks if rem file exists in given directory.
+	checkFile := path.Join(dir, f.filename)
+	if _, err := os.Stat(checkFile); err == nil {
+		return true
+	}
+	return false
+}
+
 func (f *File) setPath() error {
 	// ignore current dir if global .rem file is wanted
 	if f.global == false {
@@ -80,10 +89,17 @@ func (f *File) setPath() error {
 		if err != nil {
 			return err
 		}
-		localFile := path.Join(dir, f.filename)
-		if _, err := os.Stat(localFile); err == nil {
-			f.filepath = localFile
-			return nil
+		for {
+			// traverse through dir path
+			localFile := path.Join(dir, f.filename)
+			if f.checkPath(dir) {
+				f.filepath = localFile
+				return nil
+			}
+			if dir == "/" {
+				break
+			}
+			dir = path.Dir(dir)
 		}
 	}
 

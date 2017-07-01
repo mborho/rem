@@ -19,6 +19,8 @@ package main
 import (
 	_ "fmt"
 	"os"
+	"path"
+	"path/filepath"
 	"regexp"
 	"testing"
 )
@@ -64,7 +66,46 @@ func TestSetPath(t *testing.T) {
 	if !match {
 		t.Errorf("Local non-existant path not pointing to home dir: %s", file.filepath)
 	}
+}
 
+func TestTraverseCheckPath(t *testing.T) {
+
+	file := &File{
+		filename: ".rem_test_traversed",
+		global:   false,
+	}
+
+	f, err := os.Create(file.filename)
+	defer removeTestFile(f)
+
+	dir, err := os.Getwd()
+	if err != nil {
+		t.Errorf("Error when creating test dir: %s", dir)
+	}
+
+	testDir := path.Join(dir, "tmp")
+	if err := os.Mkdir(testDir, 755); err != nil {
+		t.Errorf("Error when creating test dir: %s", testDir)
+	}
+
+	if err := os.Chdir(testDir); err != nil {
+		t.Errorf("Error when switching test dir: %s", testDir)
+	}
+	defer os.Chdir(dir)
+
+	err = file.setPath()
+	if err != nil {
+		t.Error("Error when setting path.")
+	}
+
+	if file.filepath != path.Join(dir, file.filename) {
+		t.Errorf("Error for traversed filepath: %s", file.filepath)
+
+	}
+
+	if err := os.Remove(testDir); err != nil {
+		t.Error("Error when removing test dir.")
+	}
 }
 
 func TestCreateLocalFile(t *testing.T) {
@@ -134,6 +175,28 @@ func TestSetFileNoAppend(t *testing.T) {
 	mode := int(0600)
 	if fileInfo.Mode() != os.FileMode(mode) {
 		t.Errorf("Wrong perms: %s", fileInfo.Mode())
+	}
+	defer removeTestFile(file.file)
+}
+
+func TestCheckPath(t *testing.T) {
+
+	file := &File{
+		filename: ".rem_test",
+		global:   false,
+	}
+	if err := file.createLocalFile(); err != nil {
+		t.Errorf("Error creating local file: %s", file.filepath)
+	}
+
+	dirToCheck := filepath.Dir(file.filepath)
+	if exists := file.checkPath(dirToCheck); exists != true {
+		t.Errorf("Path not successfully checked: %s", file.filepath)
+	}
+
+	dirToCheck = filepath.Dir(dirToCheck)
+	if exists := file.checkPath(dirToCheck); exists != false {
+		t.Errorf("Path was successfully checked: %s", file.filepath)
 	}
 	defer removeTestFile(file.file)
 }
