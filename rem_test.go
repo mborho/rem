@@ -19,8 +19,8 @@ func removeRemFile(r *Rem) {
 	removeTestFile(r.file)
 }
 
-func getTestRem(t *testing.T) *Rem {
-	cmds := []byte("ls\n#foo#ls -la\necho test\n")
+func getRem(t *testing.T, remStr string) *Rem {
+	cmds := []byte(remStr)
 	if err := ioutil.WriteFile(testRemFile, cmds, 0644); err != nil {
 		t.Fatalf("Cannot create rem testfile, %s", err)
 	}
@@ -31,10 +31,16 @@ func getTestRem(t *testing.T) *Rem {
 			global:   false,
 		},
 	}
-	/*if err := rem.createLocalFile(); err != nil {
-		t.Fatalf("Cannot create local rem testfile, %s", err)
-	}*/
 	return rem
+}
+
+func getTestRem(t *testing.T) *Rem {
+	remStr := "ls\n#foo#ls -la\necho test\n"
+	return getRem(t, remStr)
+}
+
+func getTestEmptyRem(t *testing.T) *Rem {
+	return getRem(t, "")
 }
 
 func TestRead(t *testing.T) {

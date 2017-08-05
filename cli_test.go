@@ -168,6 +168,9 @@ func TestRunFilterFlag(t *testing.T) {
 	if string(out) != " 2  echo test\n" {
 		t.Errorf("Wrong filter output, got %s", out)
 	}
+
+	// reset filter
+	*filter = ""
 }
 
 func TestRunHereClear(t *testing.T) {
@@ -198,6 +201,30 @@ func TestRunHereClear(t *testing.T) {
 		t.Log("Local testRemFile was not cleared!")
 	}
 
+}
+
+func TestInitialHelp(t *testing.T) {
+	// create test file
+	rem := getTestEmptyRem(t)
+	defer removeRemFile(rem)
+	rem.read()
+
+	rescueStdout := os.Stdout
+	r, w, _ := os.Pipe()
+	os.Stdout = w
+
+	os.Args = []string{""}
+	err := run(testRemFile)
+	if err != nil {
+		t.Error("Error when running, got %s", err)
+	}
+	w.Close()
+	out, _ := ioutil.ReadAll(r)
+	os.Stdout = rescueStdout
+
+	if strings.Contains(string(out), help) == false {
+		t.Errorf("Help not displayed, got %s", out)
+	}
 }
 
 func TestRunHelp(t *testing.T) {

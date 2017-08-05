@@ -29,9 +29,8 @@ func init() {
 USAGE:
     rem [flags] [command] [argument]
 
-
 VERSION:
-    0.9.0
+    0.10.0
 
 COMMANDS:
     -h, help - Shows this help.

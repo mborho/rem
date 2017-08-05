@@ -55,7 +55,7 @@ func run(remfile string) error {
 	// check flags and run specific method.
 	var err error
 	var index int
-	//fmt.Println("%+v", flag.Args())
+
 	remCmd := flag.Arg(0)
 	switch {
 	case (remCmd == "help" || *helpFlag == true):
@@ -89,8 +89,11 @@ func run(remfile string) error {
 			err = rem.executeTag(remCmd)
 		}
 	default:
-		// if there is a not known rem-cmd it can be assumed it is a tag
 		rem.printAllLines()
+		if len(rem.lines) == 0 {
+			// show help if nothing was found
+			fmt.Println(help)
+		}
 	}
 	return err
 }
