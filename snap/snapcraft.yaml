@@ -11,7 +11,8 @@
 
   apps:
     rem:
-      command: rem
+      command: bin/build_rem
+
   parts:
     rem:
       plugin: go
