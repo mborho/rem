@@ -6,8 +6,8 @@
     be used to store commands and execute them later on. Or to simply store
     lines of text.
 
-  grade: stable # devel
-  confinement: classic # devel
+  grade: devel # stable
+  confinement: devmode # classic
 
   apps:
     rem:
