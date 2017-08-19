@@ -11,8 +11,16 @@
 
   apps:
     rem:
-      command: bin/build_rem
+      command: bin/rem
 
   parts:
     rem:
+      source: https://github.com/mborho/rem.git
+      source-tag: master
+      go-importpath: github.com/mborho/rem
       plugin: go
+      go-packages: [github.com/mborho/rem]
+      go-buildtags: [core]
+      after: [go]
+    go:
+      source-tag: go1.8
