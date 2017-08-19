@@ -30,7 +30,7 @@ USAGE:
     rem [flags] [command] [argument]
 
 VERSION:
-    0.10.0
+    0.10.1
 
 COMMANDS:
     -h, help - Shows this help.
