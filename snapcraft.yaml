@@ -6,8 +6,8 @@
     be used to store commands and execute them later on. Or to simply store
     lines of text.
 
-  grade: devel # must be 'stable' to release into candidate/stable channels
-  confinement: devmode # use 'strict' once you have the right plugs and slots
+  grade: stable # devel
+  confinement: classic # devel
 
   apps:
     rem:
