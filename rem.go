@@ -157,7 +157,10 @@ func (r *Rem) removeLine(index int) error {
 	for _, line := range append(r.lines[:index], r.lines[index+1:]...) {
 		lines = append(lines, line.line)
 	}
-	newLines := append([]byte(strings.Join(lines, "\n")), byte('\n'))
+	newLines := []byte{}
+	if len(lines) > 0 {
+		newLines = append([]byte(strings.Join(lines, "\n")), byte('\n'))
+	}
 	err := ioutil.WriteFile(r.filepath, newLines, 0644)
 	return err
 }

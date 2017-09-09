@@ -262,4 +262,34 @@ func TestRemoveLine(t *testing.T) {
 		t.Error("Wrong line was not removed")
 	}
 
+	// remove all lines
+	if err = rem.removeLine(0); err != nil {
+		t.Errorf("Error when removing line, got %s", err)
+	}
+
+	// check if line was removed
+	rem = &Rem{
+		File: File{
+			filename: testRemFile,
+			global:   false,
+		},
+	}
+	rem.read()
+
+	if err = rem.removeLine(0); err != nil {
+		t.Errorf("Error when removing line, got %s", err)
+	}
+
+	// check if line was removed
+	rem = &Rem{
+		File: File{
+			filename: testRemFile,
+			global:   false,
+		},
+	}
+	rem.read()
+
+	if len(rem.lines) > 0 {
+		t.Errorf("Error when removing lines, got %s", err)
+	}
 }
