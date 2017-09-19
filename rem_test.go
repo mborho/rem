@@ -93,6 +93,37 @@ func TestPrintLineError(t *testing.T) {
 	}
 }
 
+func TestPrintTag(t *testing.T) {
+	rescueStdout := os.Stdout
+	r, w, _ := os.Pipe()
+	os.Stdout = w
+
+	rem := getTestRem(t)
+	defer removeRemFile(rem)
+	rem.read()
+
+	rem.printTag("foo")
+
+	w.Close()
+	out, _ := ioutil.ReadAll(r)
+	os.Stdout = rescueStdout
+
+	if string(out) != "ls -la\n" {
+		t.Errorf("Wrong line output, got %s", out)
+	}
+}
+
+func TestPrintTagError(t *testing.T) {
+	rem := getTestRem(t)
+	defer removeRemFile(rem)
+	rem.read()
+
+	err := rem.printTag("4")
+	if err == nil {
+		t.Error("No error when calling non existant line.")
+	}
+}
+
 func TestPrintAllLines(t *testing.T) {
 	rescueStdout := os.Stdout
 	r, w, _ := os.Pipe()

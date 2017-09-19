@@ -122,6 +122,54 @@ func TestRunPrintLine(t *testing.T) {
 	}
 }
 
+func TestRunPrintTag(t *testing.T) {
+	// create test file
+	rem := getTestRem(t)
+	defer removeRemFile(rem)
+	rem.read()
+
+	rescueStdout := os.Stdout
+	r, w, _ := os.Pipe()
+	os.Stdout = w
+
+	os.Args = []string{"", "echo", "foo"}
+
+	err := run(testRemFile)
+	if err != nil {
+		t.Error("Error when echoing line!")
+	}
+	w.Close()
+	out, _ := ioutil.ReadAll(r)
+	os.Stdout = rescueStdout
+	if string(out) != "ls -la\n" {
+		t.Errorf("Wrong line output, got %s", out)
+	}
+}
+
+func TestRunPrintEmpty(t *testing.T) {
+	// create test file
+	rem := getTestRem(t)
+	defer removeRemFile(rem)
+	rem.read()
+
+	rescueStdout := os.Stdout
+	r, w, _ := os.Pipe()
+	os.Stdout = w
+
+	os.Args = []string{"", "echo", ""}
+
+	err := run(testRemFile)
+	if err != nil {
+		t.Error("Error when echoing line!")
+	}
+	w.Close()
+	out, _ := ioutil.ReadAll(r)
+	os.Stdout = rescueStdout
+	if string(out) != "" {
+		t.Errorf("Wrong line output, got %s", out)
+	}
+}
+
 func TestRunFilter(t *testing.T) {
 	// create test file
 	rem := getTestRem(t)

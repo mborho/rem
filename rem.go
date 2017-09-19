@@ -116,6 +116,16 @@ func (r *Rem) printLine(index int) error {
 	return nil
 }
 
+func (r *Rem) printTag(tag string) error {
+	for _, line := range r.lines {
+		if line.tag == tag {
+			fmt.Println(line.cmd)
+			return nil
+		}
+	}
+	return errors.New("Tag not found.")
+}
+
 func (r *Rem) read() error {
 	r.setPath()
 	// Read lines from the history file.

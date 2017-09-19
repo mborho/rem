@@ -79,8 +79,12 @@ func run(remfile string) error {
 			err = rem.removeLine(index)
 		}
 	case remCmd == "echo":
-		if index, err = toInt(flag.Arg(1)); err == nil {
-			err = rem.printLine(index)
+		if flag.Arg(1) != "" {
+			if index, err = toInt(flag.Arg(1)); err == nil {
+				err = rem.printLine(index)
+			} else {
+				err = rem.printTag(flag.Arg(1))
+			}
 		}
 	case remCmd != "":
 		if index, err = toInt(remCmd); err == nil {
