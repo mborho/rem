@@ -35,27 +35,6 @@ Run **rem** without any arguments to list all stored commands/strings.
 $ go get github.com/mborho/rem
 ```
 
-### Build & Run
-
-```sh
-$ git clone https://github.com/mborho/rem
-$ cd rem
-$ GOPATH=`pwd` go build -o rem main.go line.go file.go utils.go rem.go help.go cli.go
-$ ./rem
-```
-
-### PPA (deprecated)
-rem is installable on Ubuntu x86_64 via [ppa:martin-borho/rem](https://launchpad.net/~martin-borho/+archive/ubuntu/rem)
-
-
-```
-#!bash
-
-sudo add-apt-repository ppa:martin-borho/rem
-sudo apt-get update
-sudo apt-get install rem
-```
-
 ### Examples
 
 Create a local .rem file in the directory you are in:
