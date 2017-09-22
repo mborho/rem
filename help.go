@@ -29,9 +29,6 @@ func init() {
 USAGE:
     rem [flags] [command] [argument]
 
-VERSION:
-    0.12.0
-
 COMMANDS:
     -h, help - Shows this help.
     -a, add [string] - Adds a command/text.
