@@ -264,7 +264,7 @@ func TestInitialHelp(t *testing.T) {
 	os.Args = []string{""}
 	err := run(testRemFile)
 	if err != nil {
-		t.Error("Error when running, got %s", err)
+		t.Errorf("Error when running, got %s", err)
 	}
 	w.Close()
 	out, _ := ioutil.ReadAll(r)
