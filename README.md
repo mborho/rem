@@ -35,6 +35,10 @@ Run **rem** without any arguments to list all stored commands/strings.
 $ go get github.com/mborho/rem
 ```
 
+### Snap package
+
+https://snapcraft.io/rem/
+
 ### Examples
 
 Create a local .rem file in the directory you are in:
@@ -66,6 +70,10 @@ Remove a command:
 ```sh
 $ rem rm 1
 ```
+
+### Demo
+
+[![asciicast](https://asciinema.org/a/8BjbQzDLelYewyJoKPxcLasPk.png)](https://asciinema.org/a/8BjbQzDLelYewyJoKPxcLasPk)
 
 ### Thanks
 
