@@ -1,5 +1,5 @@
   name: rem
-  version: '0.12.1'
+  version: '0.13.1-dev'
   summary: rem is a small tool for remembering things on the command line.
   description: |
     rem is a small tool for remembering things on the command line. It can
