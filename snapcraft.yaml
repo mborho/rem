@@ -10,6 +10,10 @@
   grade: devel
   confinement: classic
 
+  architectures:
+    - build-on: [amd64, i386, armhf]
+      run-on: [amd64, i386, armhf]
+
   apps:
     rem:
       command: bin/rem
