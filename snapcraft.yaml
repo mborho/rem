@@ -1,13 +1,18 @@
   name: rem
-  version: '0.12.1'
+  version: '0.13.1-dev'
   summary: rem is a small tool for remembering things on the command line.
   description: |
     rem is a small tool for remembering things on the command line. It can
     be used to store commands and execute them later on. Or to simply store
     lines of text.
 
-  grade: stable
+  base: core20
+  grade: devel
   confinement: classic
+
+  architectures:
+    - build-on: [amd64, i386, armhf]
+      run-on: [amd64, i386, armhf]
 
   apps:
     rem:
@@ -16,11 +21,6 @@
   parts:
     rem:
       source: https://github.com/mborho/rem.git
-      source-tag: master
-      go-importpath: github.com/mborho/rem
+      source-branch: feature/go-module
       plugin: go
-      go-packages: [github.com/mborho/rem]
       go-buildtags: [core]
-      after: [go]
-    go:
-      source-tag: go1.8
