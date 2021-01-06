@@ -21,6 +21,6 @@
   parts:
     rem:
       source: https://github.com/mborho/rem.git
-      source-branch: feature/go-module
+      source-branch: master
       plugin: go
       go-buildtags: [core]
