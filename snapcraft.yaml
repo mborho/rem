@@ -11,8 +11,8 @@
   confinement: classic
 
   architectures:
-    - build-on: [amd64, i386, armhf]
-      run-on: [amd64, i386, armhf]
+    - build-on: [amd64, armhf]
+      run-on: [amd64, armhf]
 
   apps:
     rem:
