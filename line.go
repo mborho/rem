@@ -18,18 +18,18 @@ package main
 
 import (
 	"fmt"
+	"github.com/keybase/go-ps"
+	"golang.org/x/sys/unix"
 	"io"
 	"os"
-	"os/exec"
 	"regexp"
-	"strings"
-	"syscall"
 )
 
 type Line struct {
-	line string
-	cmd  string
-	tag  string
+	line     string
+	cmd      string
+	tag      string
+	execFlag string
 }
 
 // Read incoming string into Line struct.
@@ -46,18 +46,31 @@ func (l *Line) read(line string) {
 }
 
 func (l *Line) execute() error {
-	// Replace the current process with the cmd.
-	cmdParts := strings.Split(l.cmd, " ")
-
-	// absolute path to cmd
-	execPath, err := exec.LookPath(cmdParts[0])
+	// get the pid of the calling shell
+	pr, err := ps.FindProcess(os.Getppid())
 	if err != nil {
 		return err
 	}
 
+	// path of calling shell
+	callerPath, err := pr.Path()
+	if err != nil {
+		return err
+	}
+
+	// define 'execute' flag if not set
+	if l.execFlag == "" {
+		l.execFlag = "-c"
+	}
+
+	// /bin/bash -c "ls -la"
+	execParts := []string{callerPath, l.execFlag, l.cmd}
+
 	// replace the current process
-	env := os.Environ()
-	syscall.Exec(execPath, cmdParts, env)
+	err = unix.Exec(callerPath, execParts, os.Environ())
+	if err != nil {
+		return err
+	}
 	return nil
 }
 
