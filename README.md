@@ -80,7 +80,7 @@ $ rem rm 1
 
 ### Demo
 
-[![asciicast](https://asciinema.org/a/8BjbQzDLelYewyJoKPxcLasPk.png)](https://asciinema.org/a/8BjbQzDLelYewyJoKPxcLasPk)
+[![asciicast](https://asciinema.org/a/pvaQM8E5CGYJTPSQ4RhiWotEi.svg)](https://asciinema.org/a/pvaQM8E5CGYJTPSQ4RhiWotEi)
 
 ### Thanks
 
