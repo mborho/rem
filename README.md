@@ -2,7 +2,7 @@
 
 [![Build Status](https://travis-ci.org/mborho/rem.svg?branch=master)](https://travis-ci.org/mborho/rem)
 [![Coverage Status](https://coveralls.io/repos/github/mborho/rem/badge.svg?branch=master)](https://coveralls.io/github/mborho/rem?branch=master)
-[![Snap Status](https://build.snapcraft.io/badge/mborho/rem.svg)](https://build.snapcraft.io/user/mborho/rem)
+[![rem](https://snapcraft.io/rem/badge.svg)](https://snapcraft.io/rem)
 
 rem is a small tool for remembering things on the command line. It can be used to store commands and execute them later on. Or to simply store lines of text.
 
@@ -37,7 +37,7 @@ $ go get github.com/mborho/rem
 
 ### Snap package
 
-https://snapcraft.io/rem/
+[![Get it from the Snap Store](https://snapcraft.io/static/images/badges/en/snap-store-black.svg)](https://snapcraft.io/rem)
 
 ### Examples
 
@@ -64,7 +64,14 @@ drwxrwxr-x 2 martin martin 4096 Dez  5 14:41 .
 drwxrwxr-x 6 martin martin 4096 Dez  5 14:33 ..
 -rw------- 1 martin martin   60 Dez  5 14:42 .rem
 ```
-It's not possible to execute commands, who use parenthesis like **$(pwd)**, operators like **&&** or pipes **|**. Just simple commands. If **rem** exeuctes a command, the current **rem** process will be replaced by the command executed.
+
+You can also use parenthesis like **$(pwd)** or operators like **&&** or pipes **|**. If neccessary usse quotes to escape when adding a command.
+
+```sh
+$ rem -t count-lines -a 'cat $HOME/.bashrc | wc'
+$ rem count-lines
+    179     709    6053
+```
 
 Remove a command:
 ```sh
