@@ -35,6 +35,14 @@ Run **rem** without any arguments to list all stored commands/strings.
 $ go get github.com/mborho/rem
 ```
 
+On Linux you can install a released binary directly:
+
+```
+$ sudo wget https://github.com/mborho/rem/releases/download/v0.13.4/rem_0.13.4_linux_amd64 \
+    -O /usr/local/bin/rem && sudo chmod +x /usr/local/bin/rem
+```
+ See [releases](https://github.com/mborho/rem/releases) for the specific binary (amd64, arm, arm64) to use.
+ 
 ### Snap package
 
 [![Get it from the Snap Store](https://snapcraft.io/static/images/badges/en/snap-store-black.svg)](https://snapcraft.io/rem)
