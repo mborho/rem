@@ -1,6 +1,6 @@
 # rem - remember
 
-[![Build Status](https://travis-ci.org/mborho/rem.svg?branch=master)](https://travis-ci.org/mborho/rem)
+[![Go](https://github.com/mborho/rem/actions/workflows/go.yml/badge.svg)](https://github.com/mborho/rem/actions/workflows/go.yml)
 [![Coverage Status](https://coveralls.io/repos/github/mborho/rem/badge.svg?branch=master)](https://coveralls.io/github/mborho/rem?branch=master)
 [![rem](https://snapcraft.io/rem/badge.svg)](https://snapcraft.io/rem)
 
