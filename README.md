@@ -35,6 +35,8 @@ Run **rem** without any arguments to list all stored commands/strings.
 $ go get github.com/mborho/rem
 ```
 
+### Install binary 
+
 On Linux you can install a released binary directly:
 
 ```
