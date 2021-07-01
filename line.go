@@ -45,7 +45,7 @@ func (l *Line) read(line string) {
 	}
 }
 
-func (l *Line) execute() error {
+func (l *Line) execute(printCmd bool) error {
 	// get the pid of the calling shell
 	pr, err := ps.FindProcess(os.Getppid())
 	if err != nil {
@@ -61,6 +61,11 @@ func (l *Line) execute() error {
 	// define 'execute' flag if not set
 	if l.execFlag == "" {
 		l.execFlag = "-c"
+	}
+
+	// print cmd before executing
+	if printCmd == true {
+		fmt.Println(l.cmd)
 	}
 
 	// /bin/bash -c "ls -la"

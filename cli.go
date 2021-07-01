@@ -27,6 +27,7 @@ var (
 	helpFlag   *bool
 	addFlag    *bool
 	tagFlag    *string
+	printFlag  *bool
 	filter     *string
 )
 
@@ -36,6 +37,7 @@ func init() {
 	helpFlag = flag.Bool("h", false, "show this help")
 	addFlag = flag.Bool("a", false, "add a command")
 	tagFlag = flag.String("t", "", "tag for command")
+	printFlag = flag.Bool("p", false, "print command before executing")
 	filter = flag.String("f", "", "List commands by regexp filter.")
 }
 
@@ -49,6 +51,7 @@ func run(remfile string) error {
 			filename: remfile,
 			global:   *globalFlag,
 		},
+		printBeforeExec: *printFlag,
 	}
 	rem.read()
 
