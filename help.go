@@ -44,6 +44,7 @@ COMMANDS:
 FLAGS:
     -g - Use global rem file ~/.rem
     -t - Tag for command when adding with -a/add.
+    -p - Print command to stdout before executing index/tag.
 
 EXAMPLES:
     rem add ls -la - Adds "ls -la" to list.

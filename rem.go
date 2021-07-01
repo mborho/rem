@@ -28,9 +28,10 @@ import (
 )
 
 type Rem struct {
-	path    string
-	lines   []*Line
-	hasTags bool
+	path            string
+	lines           []*Line
+	hasTags         bool
+	printBeforeExec bool
 	File
 }
 
@@ -56,13 +57,13 @@ func (r *Rem) executeIndex(index int) error {
 	if err != nil {
 		return err
 	}
-	return line.execute()
+	return line.execute(r.printBeforeExec)
 }
 
 func (r *Rem) executeTag(tag string) error {
 	for _, line := range r.lines {
 		if line.tag == tag {
-			return line.execute()
+			return line.execute(r.printBeforeExec)
 		}
 	}
 	return errors.New("Tag not found.")
