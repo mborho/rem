@@ -1,13 +1,7 @@
 name: Go
 
-on:
-  push:
-    branches: 
-    - "**"
-  pull_request:
-    branches: 
-    - "**"
-    
+on: ["push", "pull_request"]
+
 jobs:
 
   build:
@@ -25,3 +19,8 @@ jobs:
 
     - name: Test
       run: go test -v ./...
+
+    - name: Coveralls
+      uses: coverallsapp/github-action@master
+      with:
+        github-token: ${{ secrets.GITHUB_TOKEN }}
