@@ -17,6 +17,7 @@ builds:
     - '-s -w -X main.version={{.Version}} -X main.commit={{.Commit}}'
   goos:
     - linux
+    - darwin
   goarch:
     - amd64
     - '386'
@@ -25,6 +26,12 @@ builds:
   ignore:
     - goos: linux
       goarch: '386'
+    - goos: darwin
+      goarch: '386'
+    - goos: darwin
+      goarch: 'arm'
+    - goos: darwin
+      goarch: 'arm64'
   binary: '{{ .ProjectName }}_v{{ .Version }}'
 archives:
 - format: binary
