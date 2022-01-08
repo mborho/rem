@@ -18,7 +18,7 @@ package main
 
 import (
 	"fmt"
-	"github.com/keybase/go-ps"
+	"github.com/shirou/gopsutil/v3/process"
 	"golang.org/x/sys/unix"
 	"io"
 	"os"
@@ -47,13 +47,13 @@ func (l *Line) read(line string) {
 
 func (l *Line) execute(printCmd bool) error {
 	// get the pid of the calling shell
-	pr, err := ps.FindProcess(os.Getppid())
+	p, err := process.NewProcess(int32(os.Getppid()))
 	if err != nil {
 		return err
 	}
 
 	// path of calling shell
-	callerPath, err := pr.Path()
+	callerPath, err := p.Exe()
 	if err != nil {
 		return err
 	}
