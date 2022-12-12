@@ -41,7 +41,7 @@ $ go get github.com/mborho/rem
 On Linux you can install a released binary directly:
 
 ```
-$ sudo wget https://github.com/mborho/rem/releases/download/v0.15.0/rem_0.15.0_linux_amd64 \
+$ sudo wget https://github.com/mborho/rem/releases/download/v0.16.0/rem_0.16.0_linux_amd64 \
     -O /usr/local/bin/rem && sudo chmod +x /usr/local/bin/rem
 ```
  See [releases](https://github.com/mborho/rem/releases) for the specific binary (amd64, arm, arm64) to use.

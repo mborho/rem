@@ -1,5 +1,5 @@
   name: rem
-  version: '0.15.0'
+  version: '0.16.0'
   summary: rem is a small tool for remembering things on the command line.
   description: |
     rem is a small tool for remembering things on the command line. It can
@@ -10,7 +10,7 @@
   grade: stable
   confinement: classic
 
-  architectures:  
+  architectures:
     - build-on: i386
       run-on: i386
     - build-on: amd64
@@ -18,7 +18,7 @@
     - build-on: armhf
       run-on: armhf
     - build-on: arm64
-      run-on: arm64      
+      run-on: arm64
 
   apps:
     rem:
