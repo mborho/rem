@@ -72,7 +72,12 @@ func run(remfile string) error {
 		if *addFlag == true {
 			startIndex = 0
 		}
-		err = rem.appendLine(strings.Join(flag.Args()[startIndex:], " "), *tagFlag)
+		toAdd := strings.Join(flag.Args()[startIndex:], " ")
+		if toAdd == "" {
+			// read line from stdIn
+			toAdd = rem.readFromStdIn()
+		}
+		err = rem.appendLine(toAdd, *tagFlag)
 	case (remCmd == "filter"):
 		err = rem.filterLines(strings.Join(flag.Args()[1:], " "))
 	case *filter != "":

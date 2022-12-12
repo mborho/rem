@@ -324,3 +324,65 @@ func TestRemoveLine(t *testing.T) {
 		t.Errorf("Error when removing lines, got %s", err)
 	}
 }
+
+func TestReadFromStdIn(t *testing.T) {
+	rem := getTestRem(t)
+	cases := []struct {
+		desc     string
+		input    string
+		expected string
+	}{
+		{"TestSinglLine", "date && ls -la", "date && ls -la"},
+		{
+			desc: "TestMultiline",
+			input: `date && \
+	ls -la`,
+			expected: "date && ls -la",
+		},
+		{
+			desc: "TestMultilineNoSpace",
+			input: `date  &&\
+	ls -la | \
+	wc`,
+			expected: "date  && ls -la | wc",
+		},
+	}
+	for _, tc := range cases {
+		funcDefer, err := mockStdin(t, tc.input)
+		if err != nil {
+			t.Fatal(err)
+		}
+		defer funcDefer()
+
+		input := rem.readFromStdIn()
+		if input != tc.expected {
+			t.Errorf("Wrong input was read from stdIn, want '%s', got '%s'.\n", tc.expected, input)
+		}
+	}
+}
+
+// thankfully used from https://gist.github.com/KEINOS/76857bc6339515d7144e00f17adb1090
+func mockStdin(t *testing.T, dummyInput string) (funcDefer func(), err error) {
+	t.Helper()
+
+	oldOsStdin := os.Stdin
+	tmpfile, err := ioutil.TempFile(t.TempDir(), t.Name())
+	if err != nil {
+		return nil, err
+	}
+	content := []byte(dummyInput)
+	if _, err := tmpfile.Write(content); err != nil {
+		return nil, err
+	}
+	if _, err := tmpfile.Seek(0, 0); err != nil {
+		return nil, err
+	}
+	// Set stdin to the temp file
+	os.Stdin = tmpfile
+
+	return func() {
+		// clean up
+		os.Stdin = oldOsStdin
+		os.Remove(tmpfile.Name())
+	}, nil
+}
