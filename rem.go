@@ -175,3 +175,17 @@ func (r *Rem) removeLine(index int) error {
 	err := ioutil.WriteFile(r.filepath, newLines, 0644)
 	return err
 }
+
+func (r *Rem) readFromStdIn() string {
+	var lines []string
+	scanner := bufio.NewScanner(os.Stdin)
+	for scanner.Scan() {
+		newInput := scanner.Text()
+		if len(newInput) == 0 {
+			break
+		}
+		// handle multiline-inputs
+		lines = append(lines, strings.TrimSpace(strings.TrimSuffix(newInput, "\\")))
+	}
+	return strings.Join(lines, " ")
+}
