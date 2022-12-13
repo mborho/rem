@@ -72,7 +72,7 @@ func run(remfile string) error {
 		if *addFlag == true {
 			startIndex = 0
 		}
-		toAdd := strings.Join(flag.Args()[startIndex:], " ")
+		toAdd := strings.TrimSpace(strings.Join(flag.Args()[startIndex:], " "))
 		if toAdd == "" {
 			// read line from stdIn
 			toAdd = rem.readFromStdIn()
