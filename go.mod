@@ -3,8 +3,8 @@ module github.com/mborho/rem
 go 1.19
 
 require (
-	github.com/shirou/gopsutil/v3 v3.22.11
-	golang.org/x/sys v0.3.0
+	github.com/shirou/gopsutil/v3 v3.23.1
+	golang.org/x/sys v0.4.0
 )
 
 require (
