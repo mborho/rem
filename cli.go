@@ -82,6 +82,12 @@ func run(remfile string) error {
 		err = rem.filterLines(strings.Join(flag.Args()[1:], " "))
 	case *filter != "":
 		err = rem.filterLines(*filter)
+	case remCmd == "edit":
+		if index, err = toInt(flag.Arg(1)); err == nil {
+			err = rem.editIndex(index)
+		} else {
+			err = rem.editTag(flag.Arg(1))
+		}
 	case remCmd == "rm":
 		if index, err = toInt(flag.Arg(1)); err == nil {
 			err = rem.removeLine(index)

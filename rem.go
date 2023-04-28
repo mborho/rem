@@ -52,6 +52,30 @@ func (r *Rem) appendLine(line, tag string) error {
 	return nil
 }
 
+func (r *Rem) editIndex(index int) error {
+	line, err := r.getLine(index)
+	if err != nil {
+		return err
+	}
+	edited, err := line.edit()
+	if err != nil {
+		return err
+	}
+	if edited != "" {
+		fmt.Println(edited)
+		r.replaceLine(index, edited)
+	}
+	return nil
+}
+
+func (r *Rem) editTag(tag string) error {
+	index, err := r.getIndexByTag(tag)
+	if err != nil {
+		return err
+	}
+	return r.editIndex(index)
+}
+
 func (r *Rem) executeIndex(index int) error {
 	line, err := r.getLine(index)
 	if err != nil {
@@ -61,12 +85,11 @@ func (r *Rem) executeIndex(index int) error {
 }
 
 func (r *Rem) executeTag(tag string) error {
-	for _, line := range r.lines {
-		if line.tag == tag {
-			return line.execute(r.printBeforeExec)
-		}
+	index, err := r.getIndexByTag(tag)
+	if err != nil {
+		return err
 	}
-	return errors.New("Tag not found.")
+	return r.executeIndex(index)
 }
 
 func (r *Rem) filterLines(filter string) error {
@@ -81,6 +104,16 @@ func (r *Rem) filterLines(filter string) error {
 		}
 	}
 	return nil
+}
+
+func (r *Rem) getIndexByTag(tag string) (int, error) {
+	// Returns index by tag.
+	for i, line := range r.lines {
+		if line.tag == tag {
+			return i, nil
+		}
+	}
+	return 0, errors.New("Tag not found.")
 }
 
 func (r *Rem) getLine(index int) (*Line, error) {
@@ -155,6 +188,28 @@ func (r *Rem) read() error {
 	}
 	r.lines = lines
 	return nil
+}
+
+func (r *Rem) replaceLine(index int, edited string) error {
+	lines := []string{}
+	for i, line := range r.lines {
+		if i == index {
+			newLine := ""
+			if line.tag != "" {
+				newLine = fmt.Sprintf("#%s#%s", line.tag, edited)
+			} else {
+				newLine = edited
+			}
+			lines = append(lines, newLine)
+		} else {
+			lines = append(lines, line.line)
+		}
+	}
+	newLines := []byte{}
+	if len(lines) > 0 {
+		newLines = append([]byte(strings.Join(lines, "\n")), byte('\n'))
+	}
+	return ioutil.WriteFile(r.filepath, newLines, 0644)
 }
 
 func (r *Rem) removeLine(index int) error {

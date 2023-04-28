@@ -18,11 +18,15 @@ package main
 
 import (
 	"fmt"
+	"io"
+	"io/ioutil"
+	"os"
+	"os/exec"
+	"regexp"
+	"strings"
+
 	"github.com/shirou/gopsutil/v3/process"
 	"golang.org/x/sys/unix"
-	"io"
-	"os"
-	"regexp"
 )
 
 type Line struct {
@@ -43,6 +47,42 @@ func (l *Line) read(line string) {
 		// no tag found, simple command
 		l.cmd = line
 	}
+}
+
+// Edit opens the line in a text editor and returns the edited string.
+func (l *Line) edit() (string, error) {
+	editor := os.Getenv("EDITOR")
+	if editor == "" {
+		editor = "nano" // Fallback to 'nano' as the default editor if $EDITOR is not set
+	}
+
+	file, err := ioutil.TempFile("/tmp", "tmp-*.txt")
+	if err != nil {
+		return "", err
+	}
+	defer os.Remove(file.Name())
+
+	_, err = file.WriteString(l.cmd)
+	if err != nil {
+		return "", err
+	}
+	file.Close()
+
+	cmd := exec.Command(editor, file.Name())
+	cmd.Stdin = os.Stdin
+	cmd.Stdout = os.Stdout
+	cmd.Stderr = os.Stderr
+
+	err = cmd.Run()
+	if err != nil {
+		return "", err
+	}
+
+	modifiedText, err := ioutil.ReadFile(file.Name())
+	if err != nil {
+		return "", err
+	}
+	return strings.ReplaceAll(strings.ReplaceAll(strings.TrimSpace(string(modifiedText)), "\r\n", " "), "\n", " "), nil
 }
 
 func (l *Line) execute(printCmd bool) error {

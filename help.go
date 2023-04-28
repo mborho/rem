@@ -16,8 +16,6 @@
 
 package main
 
-import ()
-
 var (
 	help string
 )
@@ -34,6 +32,7 @@ COMMANDS:
     -a, add [string] - Adds a command/text.
     rm [index] - Removes line with given index number.
     echo [index] - Displays line with given index number.
+    edit [index] - Opens default editor in $EDITOR for editing a command.
     -f, filter [regexp] - Filters stored commands by given regular expression.
     here - Creates a .rem file in the given directory. Default: ~/.rem
     clear - Clears currently active .rem file, ./.rem or ~/.rem
