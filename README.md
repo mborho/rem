@@ -17,6 +17,7 @@ $ rem [flags] command [argument]
 *    -a, add [string] - Adds a command/text.
 *    rm [index] - Removes line with given index number.
 *    echo [index] - Displays line with given index number.
+*    edit [index] - Opens default editor in $EDITOR for editing a command.
 *    -f, filter [regexp] - Filters stored commands by given regular expression.
 *    here - Creates a .rem file in the given directory. Default: **~/.rem**
 *    clear - Clears currently active .rem file, **./.rem** or **~/.rem**
@@ -41,7 +42,7 @@ $ go get github.com/mborho/rem
 On Linux you can install a released binary directly:
 
 ```
-$ sudo wget https://github.com/mborho/rem/releases/download/v0.16.2/rem_0.16.2_linux_amd64 \
+$ sudo wget https://github.com/mborho/rem/releases/download/v0.17.0/rem_0.17.0_linux_amd64 \
     -O /usr/local/bin/rem && sudo chmod +x /usr/local/bin/rem
 ```
  See [releases](https://github.com/mborho/rem/releases) for the specific binary (amd64, arm, arm64) to use.
